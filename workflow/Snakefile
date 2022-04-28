@@ -63,7 +63,7 @@ def get_alias(barcode):
     try:
         return df[df["barcode"]==barcode]["alias"].values[0]
     except:
-        None
+        return None
 
 
 #print (get_alias("30") )
@@ -74,7 +74,7 @@ def get_barcode(alias):
     try:
         return df[df["alias"]==alias]["barcode"].values[0]
     except:
-        None
+        return None
 
 
 # print (get_barcode("M00_234") )
@@ -98,27 +98,29 @@ def guppy_basecaller_barcode_fastq_output(wildcards):
     )
 
 
-# def guppy_basecaller_barcode_fastq_alias_output(wildcards):
-#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-#
-#     try:
-#         return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
-#             results=results,
-#             run=run,
-#             cfg_type=cfg_type,
-#             pass_or_fail=sorted(list(set(w.pass_or_fail))),
-#             alias=[ get_alias(barcode) for barcode in sorted(list(set(w.barcode))) if barcode in df ]
-#         )
-#     except:
-#         return []
+def guppy_basecaller_barcode_fastq_alias_output(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
+
+    barcodes = sorted(list(set(w.barcode)))
+    alias = [get_alias(b) for b in barcodes if b in df["barcode"].values]
+    print("alias:", alias, len(alias))
+
+    return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+        pass_or_fail=sorted(list(set(w.pass_or_fail))),
+        ##alias=[ get_alias(barcode) for barcode in sorted(list(set(w.barcode))) ] # if barcode in df["barcode"].values
+        alias=alias
+    )
 
 
 rule all:
     input:
         expand("{results}/{run}/{cfg_type}/guppy_basecaller.available_workflows.txt", results=results, run=run, cfg_type=cfg_type), # optional
         guppy_basecaller_barcode_fastq_output,
-#         guppy_basecaller_barcode_fastq_alias_output,
+        guppy_basecaller_barcode_fastq_alias_output,
 
 
 
