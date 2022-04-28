@@ -1,0 +1,261 @@
+import glob
+import os
+import pandas as pd
+import re
+
+
+## 1st level of config variable definition: config.yaml ################################################################
+try:
+    configfile: "config/config.yaml"
+except:
+    pass
+
+
+## 2nd level of config variable definition: snakemake command line args (overwrites previous definitions) ##############
+
+
+## 3rd level of config variable definition: Snakefile (overwrites previous definitions) ################################
+
+## outdir
+try:
+    results = config["outdir"]
+except:
+    config["outdir"] = "results"
+    results = config["outdir"]
+
+
+try:
+    config["guppy_basecaller"]
+except:
+    config["guppy_basecaller"] = "guppy_basecaller"
+
+
+try:
+    m = re.search("(.+).cfg", config["run"]["cfg"])
+    config["guppy_basecaller"]["cfg_type"]  = m.group(1)
+except:
+    config["guppy_basecaller"]["cfg_type"] = "flowcell+kit"
+cfg_type = config["guppy_basecaller"]["cfg_type"]
+
+
+try:
+    config["run"]["name"] = os.path.basename(config["input_dir"])
+    run = config["run"]["name"]
+except:
+    pass
+
+
+## config ##############################################################################################################
+
+print("{:#^60}".format(" Config "))
+print(json.dumps(config, sort_keys=True, indent=4))
+
+
+## sample_sheet ########################################################################################################
+
+print("{:#^60}".format(" sample_sheet "))
+
+df = pd.read_csv(config["run"]["sample_sheet"])
+print(df)
+
+
+def get_alias(bc):
+    try:
+        return df[df["barcode"]=="barcode"+bc]["alias"].values[0]
+    except:
+        return "barcode"+bc
+
+
+def get_bc(alias):
+    try:
+        return re.sub("^barcode", "", df[df["alias"]==alias]["barcode"].values[0])
+    except:
+        return alias
+
+
+## snakemake: all ######################################################################################################
+
+print("{:#^60}".format(" Workflow "))
+
+
+# def guppy_basecaller_barcode_fastq_output(wildcards):
+#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/barcode{bc}/{bname}.fastq.gz")
+#     return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/barcode{bc}.fastq.gz",
+#         results=results,
+#         run=run,
+#         cfg_type=cfg_type,
+#         pass_or_fail=sorted(list(set(w.pass_or_fail))),
+#         bc=sorted(list(set(w.bc))),
+#     )
+
+
+def guppy_basecaller_barcode_fastq_alias_output(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/barcode{bc}/{bname}.fastq.gz")
+    return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+        pass_or_fail=sorted(list(set(w.pass_or_fail))),
+        alias=[ get_alias(bc) for bc in sorted(list(set(w.bc))) ]
+    )
+
+
+rule all:
+    input:
+        expand("{results}/{run}/{cfg_type}/guppy_basecaller.available_workflows.txt", results=results, run=run, cfg_type=cfg_type), # optional
+        # guppy_basecaller_barcode_fastq_output,
+        guppy_basecaller_barcode_fastq_alias_output,
+
+
+
+## rules ###############################################################################################################
+
+rule guppy_basecaller_available_workflows:
+    output:
+        "{results}/{run}/{cfg_type}/guppy_basecaller.available_workflows.txt"
+    params:
+        bin=config["guppy_basecaller"]["bin"],
+    shell:
+        "{params.bin} "
+        "--print_workflows "
+        ">{output} "
+
+
+if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
+    ## flowcell+kit
+    checkpoint guppy_basecaller:
+        output:
+            ##"{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
+            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+        params:
+            bin=config["guppy_basecaller"]["bin"],
+            parameter=config["guppy_basecaller"]["parameter"],
+            input_dir=config["input_dir"],
+            output_dir="{results}/{run}/{cfg_type}/guppy_basecaller",
+            flowcell=config["run"]["flowcell"],
+            kit=config["run"]["library_prep_kit"],
+            ## sample_sheet=config["run"]["sample_sheet"],
+        log:
+            "{results}/{run}/{cfg_type}/guppy_basecaller/{run}.{cfg_type}.guppy_basecaller.log"
+        benchmark:
+            "{results}/{run}/.benchmark/{run}.{cfg_type}.guppy_basecaller.benchmark.txt"
+        shell:
+            "{params.bin} "
+            "{params.parameter} "
+            "--flowcell {params.flowcell} "
+            "--kit {params.kit} "
+            ## "--sample_sheet {params.sample_sheet} "
+            "--input_path {params.input_dir} "
+            "--save_path {params.output_dir} "
+            ">{log} 2>&1 "
+else:
+    ## cfg
+    checkpoint guppy_basecaller:
+        output:
+            ##"{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
+            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+        params:
+            bin=config["guppy_basecaller"]["bin"],
+            parameter=config["guppy_basecaller"]["parameter"],
+            input_dir=config["input_dir"],
+            output_dir="{results}/{run}/{cfg_type}/guppy_basecaller",
+            cfg=config["run"]["cfg"], # <--------------------------------------------------------------- use cfg file!!!
+            barcode_kit=config["run"]["barcode_kit"],
+            ## sample_sheet=config["run"]["sample_sheet"],
+        log:
+            "{results}/{run}/{cfg_type}/guppy_basecaller/{run}.{cfg_type}.guppy_basecaller.log"
+        benchmark:
+            "{results}/{run}/.benchmark/{run}.{cfg_type}.guppy_basecaller.benchmark.txt"
+        shell:
+            "{params.bin} "
+            "{params.parameter} "
+            "--config {params.cfg} " # <---------------------------------------------------------------- use cfg file!!!
+            ## "--sample_sheet {params.sample_sheet} "
+            "--input_path {params.input_dir} "
+            "--save_path {params.output_dir} "
+            "--barcode_kits {params.barcode_kit} "
+            ">{log} 2>&1 "
+
+
+def guppy_basecaller_barcode_fastq_input(wildcards):
+    checkpoint_output = str(checkpoints.guppy_basecaller.get(**wildcards).output[0])
+    paths = []
+
+    for f in glob.glob(checkpoint_output+"/**/*.fastq.gz", recursive=True):
+
+        m = re.search("/barcode(\d+)/", f)
+        if m:
+            bc = m.group(1)
+        else:
+            bc = None
+
+        m = re.search("/(pass|fail)/", f)
+        if m:
+            pass_or_fail = m.group(1)
+        else:
+            pass_or_fail = None
+
+        if bc==wildcards.bc and pass_or_fail==wildcards.pass_or_fail:
+            paths.append(f)
+
+    return sorted(paths)
+
+
+rule guppy_basecaller_fastq:
+    input:
+        guppy_basecaller_barcode_fastq_input
+    output:
+        "{results}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/barcode{bc}.fastq.gz"
+    threads:
+        2
+    shell:
+        "zcat {input} "
+        "| pigz -p {threads} --best "
+        ">{output} "
+
+
+def guppy_basecaller_fastq_alias_input(wildcards):
+    return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/barcode{bc}.fastq.gz",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+        pass_or_fail=wildcards.pass_or_fail,
+        bc=get_bc(wildcards.alias)
+    )
+
+
+rule guppy_basecaller_fastq_alias:
+    input:
+        #"{results}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/barcode{bc}.fastq.gz",
+        guppy_basecaller_fastq_alias_input
+    output:
+        "{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
+    shell:
+        #"cp {input} {output} "
+        "touch {output} "
+
+
+# rule guppy_barcoder:
+#     input:
+#         "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
+#     output:
+#         "{results}/{run}/{cfg_type}/guppy_barcoder/barcoding_summary.txt"
+#     params:
+#         bin=config["guppy_barcoder"]["bin"],
+#         parameter=config["guppy_barcoder"]["parameter"],
+#         input_dir="{results}/{run}/{cfg_type}/guppy_basecaller",
+#         output_dir="{results}/{run}/{cfg_type}/guppy_barcoder",
+#         barcode_kit=config["run"]["barcode_kit"],
+#     log:
+#         "{results}/{run}/{cfg_type}/guppy_barcoder/{run}.{cfg_type}.guppy_barcoder.log"
+#     benchmark:
+#         "{results}/{run}/.benchmark/{run}.{cfg_type}.guppy_barcoder.benchmark.txt"
+#     shell:
+#         "{params.bin} "
+#         "{params.parameter} "
+#         "--input_path {params.input_dir} "
+#         "--save_path {params.output_dir} "
+#         "--barcode_kits {params.barcode_kit} "
+#         ">{log} 2>&1 "
