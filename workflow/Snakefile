@@ -133,14 +133,30 @@ def fastqc_output(wildcards):
     )
 
 
+def fastq_stats_output(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
+
+    barcodes = sorted(list(set(w.barcode)))
+    alias = [get_alias(b) for b in barcodes if b in df["barcode"].values]
+    print("alias:", alias, len(alias))
+
+    return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/fastq_stats.tsv",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+    )
+
+##"{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/fastq_stats.tsv",
+
 
 rule all:
     input:
         expand("{results}/{run}/{cfg_type}/guppy_basecaller.available_workflows.txt", results=results, run=run, cfg_type=cfg_type), # optional
 #         guppy_basecaller_barcode_fastq_output,
 #         guppy_basecaller_barcode_fastq_alias_output,
-        fastqc_output,
-
+#         fastqc_output,
+        fastq_stats_output,
 
 ## rules ###############################################################################################################
 
@@ -284,7 +300,43 @@ rule fastqc:
     params: "--quiet"
     ## log:
     ##    "logs/fastqc/{sample}.log"
-    threads: 1
+    threads: 2
     wrapper:
         "v1.3.2/bio/fastqc"
+
+
+def fastq_stats_input(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
+
+    barcodes = sorted(list(set(w.barcode)))
+    alias = [get_alias(b) for b in barcodes if b in df["barcode"].values]
+    ##print("alias:", alias, len(alias))
+
+    return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+        pass_or_fail=sorted(list(set(w.pass_or_fail))),
+        alias=alias
+    )
+
+
+rule fastq_stats:
+    input:
+        fastq_stats_input
+    output:
+        "{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/fastq_stats.tsv"
+    shell:
+        "( "
+        """echo -e "sample\tqc\treads\tbases"; """
+        "for f in {input}; do "
+        "sample=$(basename ${{f%.fastq.gz}}); "
+        "qc=$(basename $(dirname ${{f%.fastq.gz}})); "
+        "reads=$(zcat $f | sed -n '1~4p' | wc -l); "
+        """bases=$(zcat $f | sed -n '2~4p' | awk 'BEGIN{{FS=""}}{{for(i=1;i<=NF;i++)c++}}END{{print c}}'); """
+        """echo -e "$sample\t$qc\t$reads\t$bases"; """
+        "done"
+        ") "
+        ">{output}; "
 
