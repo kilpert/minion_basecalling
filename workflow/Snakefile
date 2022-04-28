@@ -257,26 +257,3 @@ rule guppy_basecaller_fastq_alias:
     shell:
         "cp {input} {output} "
 
-
-# rule guppy_barcoder:
-#     input:
-#         "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-#     output:
-#         "{results}/{run}/{cfg_type}/guppy_barcoder/barcoding_summary.txt"
-#     params:
-#         bin=config["guppy_barcoder"]["bin"],
-#         parameter=config["guppy_barcoder"]["parameter"],
-#         input_dir="{results}/{run}/{cfg_type}/guppy_basecaller",
-#         output_dir="{results}/{run}/{cfg_type}/guppy_barcoder",
-#         barcode_kit=config["run"]["barcode_kit"],
-#     log:
-#         "{results}/{run}/{cfg_type}/guppy_barcoder/{run}.{cfg_type}.guppy_barcoder.log"
-#     benchmark:
-#         "{results}/{run}/.benchmark/{run}.{cfg_type}.guppy_barcoder.benchmark.txt"
-#     shell:
-#         "{params.bin} "
-#         "{params.parameter} "
-#         "--input_path {params.input_dir} "
-#         "--save_path {params.output_dir} "
-#         "--barcode_kits {params.barcode_kit} "
-#         ">{log} 2>&1 "
