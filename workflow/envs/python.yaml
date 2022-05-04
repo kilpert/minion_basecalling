@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python =3.9.1
+  - jupyter =1.0.0
+  - plotly =5.7.0
+  - pandas =1.4.2

@@ -178,6 +178,12 @@ rule all:
             run=run,
             cfg_type=cfg_type,
         ),
+        
+        expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.html",
+            results=results,
+            run=run,
+            cfg_type=cfg_type,
+        ),
 
         fastq_output,
         fastq_fastqc_output,
@@ -301,6 +307,8 @@ rule guppy_basecaller_fastq:
         "zcat {input} "
         "| pigz -p {threads} --best "
         ">{output} "
+        "|| "
+        "echo '' | gzip >{output} " # fix crash if there are no input files!!!
 
 
 ## alias ###############################################################################################################
@@ -362,6 +370,21 @@ rule fastq_flowcell_stats:
         "done"
         ") "
         ">{output}; "
+
+
+rule fastq_flowcell_stats_figures:
+    input:
+        tsv="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.tsv"
+    output:
+        "{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.html"
+    params:
+        run="{run} - {cfg_type}"
+    conda:
+        "envs/python.yaml"
+    ##log:
+    ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
+    notebook:
+        "notebooks/minion_basecalling_stats.ipynb"
 
 
 rule fastq:
