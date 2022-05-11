@@ -164,6 +164,36 @@ def fastq_multiqc_output(wildcards):
     )
 
 
+def read_lengths_output(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
+    barcodes = sorted(list(set(w.barcode)))
+    alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
+    ## print("alias:", alias, len(alias))
+    return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/tsv/{alias}.read_lengths.tsv",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+        pass_or_fail=sorted(list(set(w.pass_or_fail))),
+        alias=alias
+    )
+
+
+def read_length_plots_output(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
+    barcodes = sorted(list(set(w.barcode)))
+    alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
+    ## print("alias:", alias, len(alias))
+    return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/{run}.{cfg_type}.{pass_or_fail}.read_lengths.html",
+        results=results,
+        run=run,
+        cfg_type=cfg_type,
+        pass_or_fail=sorted(list(set(w.pass_or_fail))),
+        alias=alias
+    )
+
+
 ## rule all ############################################################################################################
 
 rule all:
@@ -194,6 +224,9 @@ rule all:
             run=run,
             cfg_type=cfg_type,
         ),
+
+        read_lengths_output,
+        read_length_plots_output,
 
 
 
@@ -449,7 +482,7 @@ def fastq_stats_input(wildcards):
     )
 
 
-rule fastq_stats_input:
+rule fastq_stats:
     input:
         fastq_stats_input
     output:
@@ -466,4 +499,49 @@ rule fastq_stats_input:
         "done"
         ") "
         ">{output}; "
+
+
+rule read_lengths:
+    input:
+        "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/{alias}.fastq.gz"
+    output:
+        "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/tsv/{alias}.read_lengths.tsv"
+    shell:
+        "( "
+        "echo -e 'n\tbp'; "
+        "zcat {input} "
+        "| sed -n '2~4p' "
+        "| awk '{{print length}}' "
+        "| sort -n "
+        "| uniq -c"
+        "| sed 's/^ *//g' "
+        "| sed 's/ /\t/' "
+        ") "
+        ">{output} "
+
+
+def read_length_plots_input(wildcards):
+    checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
+    w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
+    barcodes = sorted(list(set(w.barcode)))
+    alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
+    return expand("{{results}}/{{run}}/{{cfg_type}}/fastq/{{pass_or_fail}}/read_lengths/tsv/{alias}.read_lengths.tsv",
+        ##pass_or_fail=sorted(list(set(w.pass_or_fail))),
+        alias=alias,
+    )
+
+
+rule read_length_plots:
+    input:
+        tsv=read_length_plots_input
+    output:
+        "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/{run}.{cfg_type}.{pass_or_fail}.read_lengths.html"
+    params:
+        run="{run} - {cfg_type} ({pass_or_fail})"
+    conda:
+        "envs/python.yaml"
+    ##log:
+    ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
+    notebook:
+        "notebooks/read_length_plots.ipynb"
 
