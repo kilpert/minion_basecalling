@@ -235,6 +235,7 @@ rule all:
         read_lengths_output,
         read_length_plots_output,
 
+        ## QC
         expand("{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.{ext}",
             results=results,
             run=run,
