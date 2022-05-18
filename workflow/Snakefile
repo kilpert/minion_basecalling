@@ -45,6 +45,13 @@ except:
     pass
 
 
+try:
+    config["run"]["sequencing_summary"] = glob.glob(config["input_dir"] + "/**/sequencing_summary*.txt", recursive=True)[0]
+    sequencing_summary = config["run"]["sequencing_summary"]
+except:
+    pass
+
+
 ## config ##############################################################################################################
 
 print("{:#^60}".format(" Config "))
@@ -208,7 +215,7 @@ rule all:
             run=run,
             cfg_type=cfg_type,
         ),
-        
+
         expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.html",
             results=results,
             run=run,
@@ -228,6 +235,18 @@ rule all:
         read_lengths_output,
         read_length_plots_output,
 
+        expand("{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.{ext}",
+            results=results,
+            run=run,
+            cfg_type=cfg_type,
+            ext=["html", "json"]
+        ),
+
+        expand("{results}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.multiqc.html",
+            results=results,
+            run=run,
+            cfg_type=cfg_type,
+        ),
 
 
 ## rules ###############################################################################################################
@@ -544,4 +563,46 @@ rule read_length_plots:
     ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
     notebook:
         "notebooks/read_length_plots.ipynb"
+
+
+## Run QC
+
+rule folder_pycoqc:
+    input:
+        config["run"]["sequencing_summary"]
+    output:
+        html = "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.html",
+        json = "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.json"
+    log:
+        "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.log"
+    conda:
+        "envs/pycoqc.yaml"
+    shell:
+        "pycoQC "
+        "--summary_file {input} "
+        "--html_outfile {output.html} "
+        "--json_outfile {output.json} "
+        ">{log} 2>&1 "
+
+
+rule run_multiqc:
+    input:
+        "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.html"
+    output:
+        "{results}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.multiqc.html"
+    log:
+        "{results}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.multiqc.log"
+    conda:
+        "envs/multiqc.yaml"
+    params:
+        indir="{results}/{run}/{cfg_type}/run_qc/PycoQC/",
+        outdir="{results}/{run}/{cfg_type}/run_qc/",
+        outfile="{run}.{cfg_type}.multiqc.html"
+    shell:
+        "multiqc "
+        "--force "
+        "--outdir {params.outdir} "
+        "--filename {params.outfile} "
+        "{params.indir} "
+        ">{log} 2>&1 "
 
