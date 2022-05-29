@@ -266,7 +266,6 @@ if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
     checkpoint guppy_basecaller:
         output:
             "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-            ##directory("{results}/{run}/{cfg_type}/guppy_basecaller")
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
@@ -293,7 +292,6 @@ else:
     checkpoint guppy_basecaller:
         output:
             "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-            ##directory("{results}/{run}/{cfg_type}/guppy_basecaller")
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],

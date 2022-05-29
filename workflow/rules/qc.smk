@@ -2,7 +2,7 @@
 
 rule folder_pycoqc:
     input:
-        directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+        "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
     output:
         html="{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.html",
         json="{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.json"
