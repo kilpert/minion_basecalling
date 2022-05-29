@@ -45,14 +45,6 @@ except:
     pass
 
 
-## sequencing_summary.txt from input folder
-# try:
-#     config["run"]["sequencing_summary"] = glob.glob(config["input_dir"] + "/**/sequencing_summary*.txt", recursive=True)[0]
-#     sequencing_summary = config["run"]["sequencing_summary"]
-# except:
-#     pass
-
-
 ## config ##############################################################################################################
 
 print("{:#^60}".format(" Config "))
@@ -273,8 +265,8 @@ if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
     ## flowcell+kit
     checkpoint guppy_basecaller:
         output:
-            ##"{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+            "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
+            ##directory("{results}/{run}/{cfg_type}/guppy_basecaller")
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
@@ -300,8 +292,8 @@ else:
     ## cfg
     checkpoint guppy_basecaller:
         output:
-            ##"{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+            "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
+            ##directory("{results}/{run}/{cfg_type}/guppy_basecaller")
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
