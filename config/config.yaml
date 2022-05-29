@@ -1,7 +1,7 @@
 ## Run specific settings
 
 ## MinKNOW fast5 dir (searching *recursively* for all fast5 files!)
-input_dir: /vol/minion/minknow/data/001_20220412_FAME3
+input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
 
 run:
   sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
@@ -10,7 +10,7 @@ run:
   flowcell: FLO-MIN106 # starts with "FLO"
   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
   ## OR:
-  cfg: dna_r9.4.1_450bps_fast.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+  cfg: dna_r9.4.1_450bps_sup.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
