@@ -45,11 +45,12 @@ except:
     pass
 
 
-try:
-    config["run"]["sequencing_summary"] = glob.glob(config["input_dir"] + "/**/sequencing_summary*.txt", recursive=True)[0]
-    sequencing_summary = config["run"]["sequencing_summary"]
-except:
-    pass
+## sequencing_summary.txt from input folder
+# try:
+#     config["run"]["sequencing_summary"] = glob.glob(config["input_dir"] + "/**/sequencing_summary*.txt", recursive=True)[0]
+#     sequencing_summary = config["run"]["sequencing_summary"]
+# except:
+#     pass
 
 
 ## config ##############################################################################################################
