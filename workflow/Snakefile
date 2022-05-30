@@ -233,7 +233,7 @@ rule all:
         read_lengths_output,
         read_length_plots_output,
 
-        ## QC
+        ## PycoQC
         expand("{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.{ext}",
             results=results,
             run=run,
@@ -265,8 +265,7 @@ if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
     ## flowcell+kit
     checkpoint guppy_basecaller:
         output:
-            "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-            ##directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
@@ -292,8 +291,7 @@ else:
     ## cfg
     checkpoint guppy_basecaller:
         output:
-            "{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-            ##directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],

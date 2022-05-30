@@ -1,20 +1,23 @@
 ## Run QC
 
+def folder_pycoqc_input(wildcards):
+    checkpoint_output = str(checkpoints.guppy_basecaller.get(**wildcards).output[0])
+    return os.path.join(checkpoint_output, "sequencing_summary.txt")
+
+
 rule folder_pycoqc:
     input:
-        directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+        folder_pycoqc_input
     output:
         html="{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.html",
         json="{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.json"
-    params:
-        sequencing_summary="{results}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
     log:
         "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.log"
     conda:
         "../envs/pycoqc.yaml"
     shell:
         "pycoQC "
-        "--summary_file {params.sequencing_summary} "
+        "--summary_file {input} "
         "--html_outfile {output.html} "
         "--json_outfile {output.json} "
         ">{log} 2>&1 "
