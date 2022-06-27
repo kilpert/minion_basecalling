@@ -205,7 +205,7 @@ rule all:
     input:
         expand("{results}/{run}/{cfg_type}/guppy_basecaller.available_workflows.txt", results=results, run=run, cfg_type=cfg_type), # optional
         ## guppy_basecaller_fastq_output,
-        guppy_basecaller_fastq_alias_output,
+        ## guppy_basecaller_fastq_alias_output, # temp
         ## fastqc_alias_output, # crashes at fail/unclassified by out of memory
 
         expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.tsv",
@@ -381,7 +381,7 @@ rule guppy_basecaller_fastq_alias:
     input:
         guppy_basecaller_fastq_alias_input
     output:
-        "{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
+        temp("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz")
     shell:
         "cp {input} {output} "
 
@@ -444,8 +444,8 @@ rule fastq:
     params:
         in_path="../../guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz"
     shell:
-        ##"cp {input} {output} "
-        "ln -s {params.in_path} {output} "
+        "cp {input} {output} "
+        ##"ln -s {params.in_path} {output} "
 
 
 rule fastq_fastqc:
