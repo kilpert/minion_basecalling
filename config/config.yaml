@@ -1,14 +1,42 @@
 ## Run specific settings
 
 ## MinKNOW fast5 dir (searching *recursively* for all fast5 files!)
-input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
+
+## FAME3 ###############################################################
+#input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
+
+#run:
+  #sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
+  #barcode_kit: EXP-NBD196
+  # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  #flowcell: FLO-MIN106 # starts with "FLO"
+  #library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  # OR:
+  #cfg: dna_r9.4.1_450bps_sup.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+
+
+## ULS Canvas ##########################################################
+
+output_dir: results/ULS_Canvas
+
+#ULS_Canvas_part1: /vol/minion/minknow/data/002_20220712_ULS_Canvas_Part1/no_sample/20220712_1059_MN37911_FAR55103_f8a6359e
+#alias: ULS_Canvas_part1 # renaming alias
+
+#ULS_Canvas_part2: /vol/minion/minknow/data/002_20220713_ULS_Canvas_Part2/no_sample/20220713_0944_MN37911_FAR55103_7271ed6b
+#alias: ULS_Canvas_part2 # renaming alias
+
+input_dir: /vol/minion/minknow/data/002_20220714_ULS_Canvas_Part3/no_sample/20220714_0951_MN37911_FAR55103_f80987cf
+alias: ULS_Canvas_part3 # renaming alias
+
+#input:
+##  ULS_Canvas_part1: /vol/minion/minknow/data/002_20220712_ULS_Canvas_Part1/no_sample/20220712_1059_MN37911_FAR55103_f8a6359e
+##  ULS_Canvas_part2: /vol/minion/minknow/data/002_20220713_ULS_Canvas_Part2/no_sample/20220713_0944_MN37911_FAR55103_7271ed6b
+##  ULS_Canvas_part3: /vol/minion/minknow/data/002_20220714_ULS_Canvas_Part3/no_sample/20220714_0951_MN37911_FAR55103_f80987cf
 
 run:
-  sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
-  barcode_kit: EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
   flowcell: FLO-MIN106 # starts with "FLO"
-  library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  library_prep_kit: SQK-ULK001 # starts with "SQK" or "VSK", ultra long range
   ## OR:
   cfg: dna_r9.4.1_450bps_fast.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
 
