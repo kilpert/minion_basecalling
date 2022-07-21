@@ -371,19 +371,19 @@ if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
     ## flowcell+kit
     rule guppy_basecaller:
         output:
-            directory("{results}/{run}/{cfg_type}/guppy_basecaller")
+            "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller/done"
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
             input_dir=config["input_dir"],
-            output_dir="{results}/{run}/{cfg_type}/guppy_basecaller",
+            output_dir="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller",
             flowcell=config["run"]["flowcell"],
             kit=config["run"]["library_prep_kit"],
             ## sample_sheet=config["run"]["sample_sheet"],
         log:
-            "{results}/{run}/{cfg_type}/guppy_basecaller/{run}.{cfg_type}.guppy_basecaller.log"
+            "{results}/{cfg_type}/{alias}/log/{alias}.{part}.guppy_basecaller.log"
         benchmark:
-            "{results}/{run}/.benchmark/{run}.{cfg_type}.guppy_basecaller.benchmark.txt"
+            "{results}/{cfg_type}/{alias}/.benchmark/{cfg_type}.{alias}.{part}.guppy_basecaller.benchmark.txt"
         resources:
             gpu_requests=1
         shell:
@@ -527,7 +527,7 @@ rule fastq_multiqc:
     output:
         "{results}/{cfg_type}/{alias}/fastq/multiqc/{alias}.multiqc.html"
     params:
-        extra=" --title '{cfg_type} - {alias}'",
+        extra=" --title '{cfg_type} - {alias}' --fullnames",
     log:
         "{results}/{cfg_type}/{alias}/log/{alias}.fastq_multiqc.log"
     wrapper:
