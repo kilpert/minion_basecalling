@@ -436,7 +436,6 @@ else:
             "--save_path {params.output_dir} "
             "{params.barcode_kit} "
             ">{log} 2>&1 "
-            "&& touch {output} "
 
 
 ## concat all fastq files for each barcode
