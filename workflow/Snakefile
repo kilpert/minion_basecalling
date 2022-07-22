@@ -375,7 +375,7 @@ if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
-            input_dir=config["input_dir"],
+            input_dir=lambda wildcards: config["run"]["input_dir"][wildcards.part],
             output_dir="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller",
             flowcell=config["run"]["flowcell"],
             kit=config["run"]["library_prep_kit"],

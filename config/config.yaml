@@ -43,7 +43,7 @@ run:
   flowcell: FLO-MIN106 # starts with "FLO"
   library_prep_kit: SQK-ULK001 # starts with "SQK" or "VSK", ultra long range
   ## OR:
-  cfg: dna_r9.4.1_450bps_fast.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+#  cfg: dna_r9.4.1_450bps_fast.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
