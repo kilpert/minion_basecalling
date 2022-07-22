@@ -298,67 +298,80 @@ def demultiplexing():
 
 rule all:
     input:
-        expand("{results}/guppy_basecaller.available_workflows.txt",
+        expand("{results}/{alias}/guppy_basecaller.available_workflows.txt",
             results=results,
+            alias=alias,
         ), # optional
 
-        expand("{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller/done",
+        expand("{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/sequencing_summary.txt",
             results=results,
-            cfg_type=cfg_type,
             alias=alias,
+            cfg_type=cfg_type,
             part=part,
         ), # guppy basecalling
 
-        expand("{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz",
+        expand("{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz",
             results=results,
-            cfg_type=cfg_type,
             alias=alias,
+            cfg_type=cfg_type,
             part=part,
             pass_or_fail=["pass", "fail"],
         ), # concat basecalling fastqs
 
-        expand("{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/fastqc/{part}_{pass_or_fail}_fastqc.html",
+        expand("{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/fastqc/{part}.{pass_or_fail}_fastqc.html",
             results=results,
-            cfg_type=cfg_type,
             alias=alias,
+            cfg_type=cfg_type,
             part=part,
             pass_or_fail=["pass", "fail"],
         ), # part fastq fastqc
 
-        expand("{results}/{cfg_type}/{alias}/part/multiqc/{alias}.part.multiqc.html",
+        expand("{results}/{alias}/{cfg_type}/part/multiqc/{alias}.part.multiqc.html",
             results=results,
-            cfg_type=cfg_type,
             alias=alias,
+            cfg_type=cfg_type,
         ), # part fastq multiqc
 
-        expand("{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/{alias}.{pass_or_fail}.fastq.gz",
+        expand("{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/{alias}.{pass_or_fail}.fastq.gz",
             results=results,
             alias=alias,
-            part=part,
             cfg_type=cfg_type,
+            part=part,
             pass_or_fail=["pass", "fail"],
         ), # concat fastq from parts
 
-        expand("{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/fastqc/{alias}.{pass_or_fail}{ext}",
+        expand("{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/fastqc/{alias}.{pass_or_fail}{ext}",
             results=results,
-            cfg_type=cfg_type,
             alias=alias,
+            cfg_type=cfg_type,
             pass_or_fail=["pass", "fail"],
             ext=["_fastqc.html", "_fastqc.zip"]
         ), # fastq fastqc
 
-        expand("{results}/{cfg_type}/{alias}/fastq/multiqc/{alias}.multiqc.html",
+        expand("{results}/{alias}/{cfg_type}/fastq/multiqc/{alias}.multiqc.html",
             results=results,
-            cfg_type=cfg_type,
             alias=alias,
+            cfg_type=cfg_type,
         ), # fastq multiqc
+
+        expand("{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt",
+            results=results,
+            alias=alias,
+            cfg_type=cfg_type,
+        ), # fastq concat sequencing_summary
+
+        expand("{results}/{alias}/{cfg_type}/fastq/fastq.md5",
+            results=results,
+            alias=alias,
+            cfg_type=cfg_type,
+        ), # fastq md5
 
 
 ## rules ###############################################################################################################
 
 rule guppy_basecaller_available_workflows:
     output:
-        "{results}/guppy_basecaller.available_workflows.txt"
+        "{results}/{alias}/guppy_basecaller.available_workflows.txt"
     params:
         bin=config["guppy_basecaller"]["bin"],
     shell:
@@ -371,19 +384,19 @@ if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
     ## flowcell+kit
     rule guppy_basecaller:
         output:
-            "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller/done"
+            "{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/sequencing_summary.txt"
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
             input_dir=lambda wildcards: config["run"]["input_dir"][wildcards.part],
-            output_dir="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller",
+            output_dir="{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller",
             flowcell=config["run"]["flowcell"],
             kit=config["run"]["library_prep_kit"],
             ## sample_sheet=config["run"]["sample_sheet"],
         log:
-            "{results}/{cfg_type}/{alias}/log/{alias}.{part}.guppy_basecaller.log"
+            "{results}/{alias}/{cfg_type}/log/{alias}.{part}.guppy_basecaller.log"
         benchmark:
-            "{results}/{cfg_type}/{alias}/.benchmark/{cfg_type}.{alias}.{part}.guppy_basecaller.benchmark.txt"
+            "{results}/{alias}/{cfg_type}/.benchmark/guppy_basecaller.{alias}.{cfg_type}.{part}.benchmark.txt"
         resources:
             gpu_requests=1
         shell:
@@ -399,19 +412,19 @@ else:
     ## cfg
     rule guppy_basecaller:
         output:
-            "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller/done"
+            "{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/sequencing_summary.txt"
         params:
             bin=config["guppy_basecaller"]["bin"],
             parameter=config["guppy_basecaller"]["parameter"],
             input_dir=lambda wildcards: config["run"]["input_dir"][wildcards.part],
-            output_dir="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller",
+            output_dir="{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller",
             cfg=config["run"]["cfg"], # <--------------------------------------------------------------- use cfg file!!!
             barcode_kit=f"--barcode_kits {config['run']['barcode_kit']}" if config["run"]["barcode_kit"] else "",
             ## sample_sheet=config["run"]["sample_sheet"],
         log:
-            "{results}/{cfg_type}/{alias}/log/{alias}.{part}.guppy_basecaller.log"
+            "{results}/{alias}/{cfg_type}/log/{alias}.{part}.guppy_basecaller.log"
         benchmark:
-            "{results}/{cfg_type}/{alias}/.benchmark/{cfg_type}.{alias}.{part}.guppy_basecaller.benchmark.txt"
+            "{results}/{alias}/{cfg_type}/.benchmark/guppy_basecaller.{alias}.{cfg_type}.{part}.benchmark.txt"
         resources:
             gpu_requests=1
         shell:
@@ -429,15 +442,17 @@ else:
 ## concat all fastq files for each barcode
 rule guppy_basecaller_concat_fastq:
     input:
-        "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller/done"
+        "{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/sequencing_summary.txt"
     output:
-        "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz"
+        "{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz"
     params:
-        indir="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller/{pass_or_fail}"
+        indir="{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/{pass_or_fail}"
+    benchmark:
+        "{results}/{alias}/{cfg_type}/.benchmark/guppy_basecaller_concat_fastq.{alias}.{cfg_type}.{part}.{pass_or_fail}.benchmark.txt"
     threads:
         4
     shell:
-        "zcat $(find {params.indir} -name '*.fastq.gz' | sort) "
+        "zcat $(ls {params.indir}/*.fastq.gz | sort) "
         "| pigz -p {threads} --best "
         ">{output} "
         "|| "
@@ -446,14 +461,14 @@ rule guppy_basecaller_concat_fastq:
 
 rule part_fastq_fastqc:
     input:
-        "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz"
+        "{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz"
     output:
-        "{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/fastqc/{part}_{pass_or_fail}_fastqc.html"
+        "{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/fastqc/{part}.{pass_or_fail}_fastqc.html"
     params:
-        outdir="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/fastqc/",
-        temp="{results}/{cfg_type}/{alias}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/fastqc/{part}.{pass_or_fail}_fastqc.html"
+        outdir="{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/fastqc/",
+        temp="{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/fastqc/{part}.{pass_or_fail}_fastqc.html"
     log:
-        "{results}/{cfg_type}/{alias}/log/{alias}.{part}.{pass_or_fail}.fastq_fastqc.log"
+        "{results}/{alias}/{cfg_type}/log/{alias}.{part}.{pass_or_fail}.fastq_fastqc.log"
     conda:
         "envs/fastqc.yaml"
     threads:
@@ -464,18 +479,18 @@ rule part_fastq_fastqc:
         "-o {params.outdir} "
         "{input} "
         ">{log} 2>&1 "
-        "&& mv {params.temp} {output} " # rename output file
+        ##"&& mv {params.temp} {output} " # rename output file
 
 
 rule part_fastq_multiqc:
     input:
-        expand("{{results}}/{{cfg_type}}/{{alias}}/part/{part}/guppy_basecaller_fastq/{pass_or_fail}/fastqc/{part}_{pass_or_fail}_fastqc.html", part=part, pass_or_fail=["pass", "fail"])
+        expand("{{results}}/{{alias}}/{{cfg_type}}/part/{part}/fastq/{pass_or_fail}/fastqc/{part}.{pass_or_fail}_fastqc.html", part=part, pass_or_fail=["pass", "fail"])
     output:
-        "{results}/{cfg_type}/{alias}/part/multiqc/{alias}.part.multiqc.html"
+        "{results}/{alias}/{cfg_type}/part/multiqc/{alias}.part.multiqc.html"
     params:
         extra=" --title '{cfg_type} - {alias} (Parts)' --fullnames",
     log:
-        "{results}/{cfg_type}/{alias}/log/{alias}.fastq_part_multiqc.log"
+        "{results}/{alias}/{cfg_type}/log/{alias}.fastq_part_multiqc.log"
     conda:
         "envs/multiqc.yaml"
     wrapper:
@@ -484,9 +499,9 @@ rule part_fastq_multiqc:
 
 rule concat_part_fastq:
     input:
-        expand("{{results}}/{{cfg_type}}/{{alias}}/part/{part}/guppy_basecaller_fastq/{{pass_or_fail}}/{part}.{{pass_or_fail}}.fastq.gz", part=part)
+        expand("{{results}}/{{alias}}/{{cfg_type}}/part/{part}/fastq/{{pass_or_fail}}/{part}.{{pass_or_fail}}.fastq.gz", part=part)
     output:
-        "{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/{alias}.{pass_or_fail}.fastq.gz"
+        "{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/{alias}.{pass_or_fail}.fastq.gz"
     threads:
         4
     shell:
@@ -499,15 +514,15 @@ rule concat_part_fastq:
 
 rule fastq_fastqc:
     input:
-        "{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/{alias}.{pass_or_fail}.fastq.gz"
+        "{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/{alias}.{pass_or_fail}.fastq.gz"
     output:
-        html="{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/fastqc/{alias}.{pass_or_fail}_fastqc.html",
-        zip="{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/fastqc/{alias}.{pass_or_fail}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
+        html="{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/fastqc/{alias}.{pass_or_fail}_fastqc.html",
+        zip="{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/fastqc/{alias}.{pass_or_fail}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
     params:
-        outdir="{results}/{cfg_type}/{alias}/fastq/{pass_or_fail}/fastqc/",
+        outdir="{results}/{alias}/{cfg_type}/fastq/{pass_or_fail}/fastqc/",
         extra=""
     log:
-        "{results}/{cfg_type}/{alias}/log/{alias}.{pass_or_fail}.fastq_fastqc.log"
+        "{results}/{alias}/{cfg_type}/log/{alias}.{pass_or_fail}.fastq_fastqc.log"
     conda:
         "envs/fastqc.yaml"
     threads:
@@ -523,15 +538,41 @@ rule fastq_fastqc:
 
 rule fastq_multiqc:
     input:
-        expand("{{results}}/{{cfg_type}}/{{alias}}/fastq/{pass_or_fail}/fastqc/{{alias}}.{pass_or_fail}_fastqc.html", pass_or_fail=["pass", "fail"])
+        expand("{{results}}/{{alias}}/{{cfg_type}}/fastq/{pass_or_fail}/fastqc/{{alias}}.{pass_or_fail}_fastqc.html", pass_or_fail=["pass", "fail"])
     output:
-        "{results}/{cfg_type}/{alias}/fastq/multiqc/{alias}.multiqc.html"
+        "{results}/{alias}/{cfg_type}/fastq/multiqc/{alias}.multiqc.html"
     params:
         extra=" --title '{cfg_type} - {alias}' --fullnames",
     log:
-        "{results}/{cfg_type}/{alias}/log/{alias}.fastq_multiqc.log"
+        "{results}/{alias}/{cfg_type}/log/{alias}.fastq_multiqc.log"
     wrapper:
-       "v1.3.2/bio/multiqc"
+       "v1.7.1/bio/multiqc"
+
+
+rule fastq_sequencing_summary:
+    input:
+        expand("{{results}}/{{alias}}/{{cfg_type}}/part/{part}/guppy_basecaller/sequencing_summary.txt", part=part)
+    output:
+        "{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt"
+    shell:
+        "( "
+        "head -1 {input[0]}; "
+        "cat {input} "
+        "| grep -v '^filename' "
+        ") "
+        ">{output} "
+
+
+rule fastq_md5:
+    input:
+        "{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt",
+        "{results}/{alias}/{cfg_type}/fastq/multiqc/{alias}.multiqc.html"
+    output:
+        "{results}/{alias}/{cfg_type}/fastq/fastq.md5"
+    params:
+        outdir="{results}/{alias}/{cfg_type}/fastq"
+    shell:
+        "workflow/scripts/md5_make {params.outdir} "
 
 
 # def guppy_basecaller_fastq_input(wildcards):
