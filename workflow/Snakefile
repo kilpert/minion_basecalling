@@ -42,7 +42,8 @@ try:
     m = re.search("(.+).cfg", config["run"]["cfg"])
     config["guppy_basecaller"]["cfg_type"]  = m.group(1)
 except:
-    config["guppy_basecaller"]["cfg_type"] = "flowcell+kit"
+    config["guppy_basecaller"]["cfg_type"] = f"{config['run']['flowcell']}_{config['run']['library_prep_kit']}"
+    flowcell_and_kit = config["guppy_basecaller"]["cfg_type"]
 cfg_type = config["guppy_basecaller"]["cfg_type"]
 
 
@@ -388,7 +389,7 @@ rule guppy_basecaller_available_workflows:
         ">{output} "
 
 
-if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
+if config["guppy_basecaller"]["cfg_type"] == flowcell_and_kit:
     ## flowcell+kit
     rule guppy_basecaller:
         output:
@@ -592,7 +593,7 @@ rule fastq_pycoQC:
 
 rule fastq_md5:
     input:
-        "{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt",
+        "{results}/{alias}/{cfg_type}/fastq/pycoQC/{alias}.{cfg_type}.sequencing_summary.html",
         "{results}/{alias}/{cfg_type}/fastq/multiqc/{alias}.multiqc.html",
         "{results}/{alias}/{cfg_type}/fastq/pycoQC/{alias}.{cfg_type}.sequencing_summary.html"
     output:
