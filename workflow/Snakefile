@@ -123,7 +123,7 @@ print("cfg_type:", cfg_type)
 
 ## include #############################################################################################################
 
-include: "rules/qc.smk"
+##include: "rules/qc.smk"
 
 
 ## snakemake: all ######################################################################################################
@@ -310,13 +310,13 @@ rule all:
             part=part,
         ), # guppy basecalling
 
-        expand("{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz",
-            results=results,
-            alias=alias,
-            cfg_type=cfg_type,
-            part=part,
-            pass_or_fail=["pass", "fail"],
-        ), # concat basecalling fastqs
+##         expand("{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz",
+##             results=results,
+##             alias=alias,
+##             cfg_type=cfg_type,
+##             part=part,
+##             pass_or_fail=["pass", "fail"],
+##         ), # concat basecalling fastqs
 
         expand("{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/fastqc/{part}.{pass_or_fail}_fastqc.html",
             results=results,
@@ -354,11 +354,19 @@ rule all:
             cfg_type=cfg_type,
         ), # fastq multiqc
 
-        expand("{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt",
+##         expand("{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt",
+##             results=results,
+##             alias=alias,
+##             cfg_type=cfg_type,
+##         ), # fastq concat sequencing_summary
+
+        expand("{results}/{alias}/{cfg_type}/fastq/pycoQC/{alias}.{cfg_type}.sequencing_summary.{ext}",
             results=results,
             alias=alias,
             cfg_type=cfg_type,
-        ), # fastq concat sequencing_summary
+            pass_or_fail=["pass", "fail"],
+            ext=["html", "json"]
+        ), # pycoQC
 
         expand("{results}/{alias}/{cfg_type}/fastq/fastq.md5",
             results=results,
@@ -443,7 +451,7 @@ rule guppy_basecaller_concat_fastq:
     input:
         "{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/sequencing_summary.txt"
     output:
-        "{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz"
+        temp("{results}/{alias}/{cfg_type}/part/{part}/fastq/{pass_or_fail}/{part}.{pass_or_fail}.fastq.gz")
     params:
         indir="{results}/{alias}/{cfg_type}/part/{part}/guppy_basecaller/{pass_or_fail}"
     benchmark:
@@ -548,24 +556,45 @@ rule fastq_multiqc:
        "v1.7.1/bio/multiqc"
 
 
-rule fastq_sequencing_summary:
+## Could be misleading header from only one file!!!
+## rule fastq_sequencing_summary:
+##     input:
+##         expand("{{results}}/{{alias}}/{{cfg_type}}/part/{part}/guppy_basecaller/sequencing_summary.txt", part=part)
+##     output:
+##         "{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt"
+##     shell:
+##         "( "
+##         "head -1 {input[0]}; "
+##         "cat {input} "
+##         "| grep -v '^filename' "
+##         ") "
+##         ">{output} "
+
+
+rule fastq_pycoQC:
     input:
         expand("{{results}}/{{alias}}/{{cfg_type}}/part/{part}/guppy_basecaller/sequencing_summary.txt", part=part)
     output:
-        "{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt"
+        html="{results}/{alias}/{cfg_type}/fastq/pycoQC/{alias}.{cfg_type}.sequencing_summary.html",
+        json="{results}/{alias}/{cfg_type}/fastq/pycoQC/{alias}.{cfg_type}.sequencing_summary.json"
+    log:
+        "{results}/{alias}/{cfg_type}/log/{alias}.{cfg_type}.pycoQC.log"
+    conda:
+        "envs/pycoqc.yaml"
     shell:
-        "( "
-        "head -1 {input[0]}; "
-        "cat {input} "
-        "| grep -v '^filename' "
-        ") "
-        ">{output} "
+        "pycoQC "
+        "--report_title '{wildcards.alias} - {wildcards.cfg_type}' "
+        "--summary_file {input} "
+        "--html_outfile {output.html} "
+        "--json_outfile {output.json} "
+        ">{log} 2>&1 "
 
 
 rule fastq_md5:
     input:
         "{results}/{alias}/{cfg_type}/fastq/sequencing_summary.txt",
-        "{results}/{alias}/{cfg_type}/fastq/multiqc/{alias}.multiqc.html"
+        "{results}/{alias}/{cfg_type}/fastq/multiqc/{alias}.multiqc.html",
+        "{results}/{alias}/{cfg_type}/fastq/pycoQC/{alias}.{cfg_type}.sequencing_summary.html"
     output:
         "{results}/{alias}/{cfg_type}/fastq/fastq.md5"
     params:
