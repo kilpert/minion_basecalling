@@ -33,17 +33,30 @@
 ##  ULS_Canvas_part2: /vol/minion/minknow/data/002_20220713_ULS_Canvas_Part2/no_sample/20220713_0944_MN37911_FAR55103_7271ed6b
 #  ULS_Canvas_part3: /vol/minion/minknow/data/002_20220714_ULS_Canvas_Part3/no_sample/20220714_0951_MN37911_FAR55103_f80987cf
 
+#run:
+#  alias: ULS_Canvas # output name
+#  input_dir:
+#    ULS_Canvas_part1: /vol/minion/minknow/data/002_20220712_ULS_Canvas_Part1/no_sample/20220712_1059_MN37911_FAR55103_f8a6359e
+#    ULS_Canvas_part2: /vol/minion/minknow/data/002_20220713_ULS_Canvas_Part2/no_sample/20220713_0944_MN37911_FAR55103_7271ed6b
+#    ULS_Canvas_part3: /vol/minion/minknow/data/002_20220714_ULS_Canvas_Part3/no_sample/20220714_0951_MN37911_FAR55103_f80987cf
+#  ## Make your choice: (guppy is configured either with flowcell+library_prep_kit OR cfg file)! The cfg will overrule flowcell+library_prep_kit in this workflow!
+#  flowcell: FLO-MIN106 # starts with "FLO"
+#  library_prep_kit: SQK-ULK001 # starts with "SQK" or "VSK", ultra long range
+#  # OR:
+#  cfg: dna_r9.4.1_450bps_fast.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+
+
+## ULS_SPG7 ##
+
 run:
-  alias: ULS_Canvas # output name
+  alias: ULS_SPG7 # output name
   input_dir:
-    ULS_Canvas_part1: /vol/minion/minknow/data/002_20220712_ULS_Canvas_Part1/no_sample/20220712_1059_MN37911_FAR55103_f8a6359e
-    ULS_Canvas_part2: /vol/minion/minknow/data/002_20220713_ULS_Canvas_Part2/no_sample/20220713_0944_MN37911_FAR55103_7271ed6b
-    ULS_Canvas_part3: /vol/minion/minknow/data/002_20220714_ULS_Canvas_Part3/no_sample/20220714_0951_MN37911_FAR55103_f80987cf
+    all_parts: /vol/minion/minknow/data/003_20220802_ULS_SPG7_0/no_sample/20220802_1618_MN37911_FAR58940_9903441e
   ## Make your choice: (guppy is configured either with flowcell+library_prep_kit OR cfg file)! The cfg will overrule flowcell+library_prep_kit in this workflow!
   flowcell: FLO-MIN106 # starts with "FLO"
   library_prep_kit: SQK-ULK001 # starts with "SQK" or "VSK", ultra long range
   ## OR:
-#  cfg: dna_r9.4.1_450bps_sup.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+  cfg: dna_r9.4.1_450bps_hac.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
