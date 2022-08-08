@@ -41,6 +41,7 @@ except:
 try:
     m = re.search("(.+).cfg", config["run"]["cfg"])
     config["guppy_basecaller"]["cfg_type"]  = m.group(1)
+    flowcell_and_kit = None
 except:
     config["guppy_basecaller"]["cfg_type"] = f"{config['run']['flowcell']}_{config['run']['library_prep_kit']}"
     flowcell_and_kit = config["guppy_basecaller"]["cfg_type"]
