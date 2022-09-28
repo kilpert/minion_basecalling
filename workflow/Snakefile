@@ -459,7 +459,7 @@ rule fastq_fastqc:
     threads:
         2
     wrapper:
-        "v1.3.2/bio/fastqc"
+        "v1.14.1/bio/fastqc"
 
 
 def multiqc_input(wildcards):
