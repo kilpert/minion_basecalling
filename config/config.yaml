@@ -1,16 +1,20 @@
 ## Run specific settings
 
 ## MinKNOW fast5 dir (searching *recursively* for all fast5 files!)
-input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
+## specify path to MinKnow output dir (e.g. 20220412_1232_MN37911_FAR54812_bfd8a256 of format: run_date run_time position flow_cell_id run_id_shorthash)
+
 
 run:
+  input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
   sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
-  barcode_kit: EXP-NBD196
+  ##sample_sheet: sample_sheets/example.sample_sheet.csv
+  barcode_kits:
+    - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-  flowcell: FLO-MIN106 # starts with "FLO"
-  library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  ## flowcell: FLO-MIN106 # starts with "FLO"
+  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
   ## OR:
-  cfg: dna_r9.4.1_450bps_fast.cfg # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
@@ -20,15 +24,24 @@ run:
 
 
 ## Guppy
+guppy_cfg: # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+  - dna_r9.4.1_450bps_fast.cfg
+#  - dna_r9.4.1_450bps_hac.cfg
+#  - dna_r9.4.1_450bps_sup.cfg
+
 
 guppy_basecaller:
   ## bin: /vol/minion/opt/ont-guppy_6.1.5/bin/guppy_basecaller
   ## bin: /vol/minion/opt/ont-guppy_6.2.1/bin/guppy_basecaller
   ## bin: /vol/minion/opt/ont-guppy_6.3.4/bin/guppy_basecaller
-  bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-  parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
+  ont-guppy_6.3.7:
+    bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
+  ont-guppy_6.3.8:
+    bin: /vol/minion/opt/ont-guppy_6.3.8/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
 
-outdir: results.ont-guppy_6.3.7
+
 
 #guppy_barcoder:
 #  bin: /vol/minion/opt/ont-guppy_6.1.2/bin/guppy_barcoder
