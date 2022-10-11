@@ -265,7 +265,7 @@ rule all:
             cfg_type=cfg_type,
         ), # guppy basecaller directory
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/{pass_or_fail}.txt",
+        expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}",
             results=results,
             guppy=guppy,
             run=run,
@@ -294,10 +294,47 @@ rule all:
             guppy=guppy,
             run=run,
             cfg_type=cfg_type,
-        ),# md5
+        ), # md5
 
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            ext=["tsv", "html"]
+        ), # flowcell stats on all fastq
 
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+            ext=[".html", "_fastqc.zip"]
+        ), # fastqc
 
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+        ), # multiqc
+
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+        ), # read lengths tsv
+
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+        ),
 
 #         guppy_basecaller_fastq_output,
 #
@@ -465,15 +502,16 @@ rule guppy_basecaller_fastq:
     input:
         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
     output:
-        "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/{pass_or_fail}.txt"
+        directory("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}")
     params:
         indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/{pass_or_fail}",
-        outdir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}"
+        ##outdir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}"
     benchmark:
         "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller_fastq.{pass_or_fail}.benchmark.txt"
     threads:
         4
     shell:
+        "[ -d {output} ] || mkdir -p {output}; "
         "( "
         "samples=$(ls -1 {params.indir} | sort); "
         ##"""echo -e "$samples\n"; """
@@ -483,10 +521,11 @@ rule guppy_basecaller_fastq:
         """echo -e "$fastqs\n"; """
         "zcat $fastqs "
         "| pigz -p {threads} --best "
-        ">{params.outdir}/${{sample}}.fastq.gz; "
+        ">{output}/${{sample}}.fastq.gz; "
         "done "
         ") "
-        ">{output} "
+        ">{output}/{wildcards.pass_or_fail}.txt "
+
 
 
 rule fastq_sequencing_summary:
@@ -505,19 +544,16 @@ rule fastq_sequencing_summary:
         "cp {input.js} {output.js} "
 
 
-
 rule fastq:
     input:
-        "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/pass/pass.txt"
+        "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/pass"
     output:
         "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
     params:
-        indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/pass",
         outdir="{results}/{guppy}/{run}/{cfg_type}/fastq"
     shell:
-        "cp {params.indir}/{wildcards.sample}.fastq.gz "
+        "cp {input}/{wildcards.sample}.fastq.gz "
         "{params.outdir} "
-        "&& touch {output} "
 
 
 rule fastq_md5:
@@ -536,6 +572,43 @@ rule fastq_md5:
         "{params.indir} "
 
 
+rule fastq_stats_all:
+    input:
+        expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/guppy_basecaller_fastq/{pass_or_fail}",
+            pass_or_fail=["pass", "fail"]
+        )
+    output:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.tsv"
+    params:
+        indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq"
+    shell:
+        "( "
+        """echo -e "sample\tqc\treads\tbases"; """
+        "fastqs=$(find {params.indir} -name '*.fastq.gz' | sort); "
+        "for f in $fastqs; do "
+        "qc=$(dirname $f | xargs basename); "
+        "sample=$(basename ${{f%.fastq.gz}}); "
+        "reads=$(zcat $f | sed -n '1~4p' | wc -l); "
+        """bases=$(zcat $f | sed -n '2~4p' | awk 'BEGIN{{FS=""}}{{for(i=1;i<=NF;i++)c++}}END{{print c}}'); """
+        """echo -e "$sample\t$qc\t$reads\t$bases"; """
+        "done; "
+        ") "
+        ">{output}; "
+
+
+rule fastq_flowcell_stats_figures:
+    input:
+        tsv="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.tsv"
+    output:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.html"
+    params:
+        run="{run} - {cfg_type}"
+    conda:
+        "envs/python.yaml"
+    ##log:
+    ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
+    notebook:
+        "notebooks/minion_basecalling_stats.ipynb"
 
 
 # fastq_input_counter = 0
@@ -725,20 +798,20 @@ rule fastq_md5:
 #         "cp {input}/sequencing_summary.txt {output} "
 
 
-# rule fastq_fastqc:
-#     input:
-#         "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/{alias}.fastq.gz"
-#     output:
-#         html="{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/fastqc/{alias}.html",
-#         zip="{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/fastqc/{alias}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
-#     params:
-#         "--quiet"
-#     threads:
-#         2
-#     wrapper:
-#         "v1.14.1/bio/fastqc"
-#
-#
+rule fastq_fastqc:
+    input:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
+    output:
+        html="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}.html",
+        zip="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
+    params:
+        "--quiet"
+    threads:
+        2
+    wrapper:
+        "v1.14.1/bio/fastqc"
+
+
 # def multiqc_input(wildcards):
 #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
 #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
@@ -749,21 +822,24 @@ rule fastq_md5:
 #         pass_or_fail=wildcards.pass_or_fail,
 #         alias=alias,
 #     )
-#
-#
-# rule multiqc:
-#     input:
-#         multiqc_input
-#     output:
-#         "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/multiqc/{run}.{pass_or_fail}.multiqc.html"
-#     params:
-#         ""  # Optional: extra parameters for multiqc.
-#     log:
-#         "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/multiqc/{run}.{pass_or_fail}.multiqc.log"
-#     wrapper:
-#         "v1.3.2/bio/multiqc"
-#
-#
+
+
+rule multiqc:
+    input:
+        expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/qc/fastqc/{sample}{ext}",
+            sample=samples,
+            ext=[".html", "_fastqc.zip"]
+        )
+    output:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html"
+    params:
+        ""  # Optional: extra parameters for multiqc.
+    log:
+        "{results}/{run}/{guppy}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
+    wrapper:
+        "v1.3.2/bio/multiqc"
+
+
 # def fastq_stats_input(wildcards):
 #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
 #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
@@ -792,27 +868,27 @@ rule fastq_md5:
 #         "done"
 #         ") "
 #         ">{output}; "
-#
-#
-# rule read_lengths:
-#     input:
-#         "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/{alias}.fastq.gz"
-#     output:
-#         "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/tsv/{alias}.read_lengths.tsv"
-#     shell:
-#         "( "
-#         "echo -e 'n\tbp'; "
-#         "zcat {input} "
-#         "| sed -n '2~4p' "
-#         "| awk '{{print length}}' "
-#         "| sort -n "
-#         "| uniq -c"
-#         "| sed 's/^ *//g' "
-#         "| sed 's/ /\t/' "
-#         ") "
-#         ">{output} "
-#
-#
+
+
+rule read_lengths:
+    input:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
+    output:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv"
+    shell:
+        "( "
+        "echo -e 'n\tbp'; "
+        "zcat {input} "
+        "| sed -n '2~4p' "
+        "| awk '{{print length}}' "
+        "| sort -n "
+        "| uniq -c"
+        "| sed 's/^ *//g' "
+        "| sed 's/ /\t/' "
+        ") "
+        ">{output} "
+
+
 # def read_length_plots_input(wildcards):
 #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
 #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
@@ -822,20 +898,21 @@ rule fastq_md5:
 #         ##pass_or_fail=sorted(list(set(w.pass_or_fail))),
 #         alias=alias,
 #     )
-#
-#
-# rule read_length_plots:
-#     input:
-#         tsv=read_length_plots_input
-#     output:
-#         "{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/{run}.{cfg_type}.{pass_or_fail}.read_lengths.html"
-#     params:
-#         run="{run} - {cfg_type} ({pass_or_fail})"
-#     conda:
-#         "envs/python.yaml"
-#     ##log:
-#     ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
-#     notebook:
-#         "notebooks/read_length_plots.ipynb"
-#
+
+
+rule read_length_plots:
+    input:
+        tsv=expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
+            sample=samples,
+        )
+    output:
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html"
+    params:
+        run="{run} - {cfg_type}"
+    conda:
+        "envs/python.yaml"
+    ##log:
+    ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
+    notebook:
+        "notebooks/read_length_plots.ipynb"
 
