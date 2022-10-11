@@ -34,9 +34,9 @@ guppy_basecaller:
   ## bin: /vol/minion/opt/ont-guppy_6.1.5/bin/guppy_basecaller
   ## bin: /vol/minion/opt/ont-guppy_6.2.1/bin/guppy_basecaller
   ## bin: /vol/minion/opt/ont-guppy_6.3.4/bin/guppy_basecaller
-  ont-guppy_6.3.7:
-    bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
+#  ont-guppy_6.3.7:
+#    bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+#    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
   ont-guppy_6.3.8:
     bin: /vol/minion/opt/ont-guppy_6.3.8/bin/guppy_basecaller # remove --trim_barcodes (on by default)
     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
