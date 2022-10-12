@@ -296,7 +296,7 @@ rule all:
             cfg_type=cfg_type,
         ), # md5
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.{ext}",
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
             results=results,
             guppy=guppy,
             run=run,
@@ -568,17 +568,18 @@ rule fastq_md5:
     params:
         indir="{results}/{guppy}/{run}/{cfg_type}/fastq"
     shell:
+        ""
         "bash workflow/scripts/md5_make "
         "{params.indir} "
 
 
-rule fastq_stats_all:
+rule fastq_overview:
     input:
         expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/guppy_basecaller_fastq/{pass_or_fail}",
             pass_or_fail=["pass", "fail"]
         )
     output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.tsv"
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.tsv"
     params:
         indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq"
     shell:
@@ -598,9 +599,9 @@ rule fastq_stats_all:
 
 rule fastq_flowcell_stats_figures:
     input:
-        tsv="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.tsv"
+        tsv="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.tsv"
     output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_stats_all/{run}.fastq_stats_all.html"
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.html"
     params:
         run="{run} - {cfg_type}"
     conda:
@@ -835,7 +836,7 @@ rule multiqc:
     params:
         ""  # Optional: extra parameters for multiqc.
     log:
-        "{results}/{run}/{guppy}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
+        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
     wrapper:
         "v1.3.2/bio/multiqc"
 
