@@ -17,17 +17,43 @@
   # ## OR:
 
 
-## FAME3 run2
+## FAME3 004
+# run:
+#  input_dir: /vol/minion/minknow/data/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041
+#  sample_sheet: sample_sheets/004_20221019_FAME3_DAB1_FGF14_SCA8.sample_sheet.csv
+#  ##sample_sheet: sample_sheets/example.sample_sheet.csv
+#  barcode_kits:
+#    - EXP-NBD196
+#  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#  ## flowcell: FLO-MIN106 # starts with "FLO"
+#  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#  ## OR:
+
+
+## FAME3 Run005
 run:
-  input_dir: /vol/minion/minknow/data/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041
-  sample_sheet: sample_sheets/004_20221019_FAME3_DAB1_FGF14_SCA8.sample_sheet.csv
+  input_dir: /vol/minion/minknow/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84
+  sample_sheet: sample_sheets/Run005_20230321_FAME3_NAA10_Ilaria.sample_sheet.csv
   ##sample_sheet: sample_sheets/example.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
-  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-  ## flowcell: FLO-MIN106 # starts with "FLO"
-  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-  ## OR:
+  # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  # flowcell: FLO-MIN106 # starts with "FLO"
+  # library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  # OR:
+
+
+## FAME3 Run006
+#run:
+#  input_dir: /vol/minion/minknow/data/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7
+#  sample_sheet: sample_sheets/Run006_20230322_FAME3_NAA10_Ilaria.sample_sheet.csv
+#  ##sample_sheet: sample_sheets/example.sample_sheet.csv
+#  barcode_kits:
+#    - EXP-NBD196
+#  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#  ## flowcell: FLO-MIN106 # starts with "FLO"
+#  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#  ## OR:
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
@@ -53,4 +79,7 @@ guppy_basecaller:
   ont-guppy_6.3.8:
     bin: /vol/minion/opt/ont-guppy_6.3.8/bin/guppy_basecaller # remove --trim_barcodes (on by default)
     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
+  ont-guppy_6.4.6:
+    bin: /vol/minion/opt/ont-guppy_6.4.6/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder
 
