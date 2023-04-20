@@ -60,9 +60,9 @@ except:
 
 
 try:
-    gpu_txt = config["gpu.txt"]
+    wait_log = config["wait_log"]
 except:
-    gpu_txt = os.path.join(results, "gpu.txt")
+    wait_log = os.path.join(results, "wait.log")
 
 
 
@@ -491,7 +491,7 @@ checkpoint guppy_basecaller:
         barcode_kits=f"--barcode_kits {' '.join(config['run']['barcode_kits'])}" if config["run"]["barcode_kits"] else "",
         sample_sheet=f"--sample_sheet {config['run']['sample_sheet']}" if config["run"]["sample_sheet"] else "",
         n_gpu = 1,
-        ## gpu_txt = "{results}/gpu_txt"
+        wait_log=wait_log,
     log:
         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/guppy_basecaller.log"
     benchmark:
@@ -499,8 +499,9 @@ checkpoint guppy_basecaller:
     resources:
         gpu_requests=1,
     shell:
-        "sleep $[ ( $RANDOM % 30 ) + 1 ]s; " # sleep
-        "GPU=$(workflow/scripts/which_gpu.py {params.n_gpu}); "
+        "sleep $[ ( $RANDOM % 10 ) + 1 ]s; " # initial sleep
+        "workflow/scripts/wait.sh {params.wait_log}; " # wait.sh
+        "GPU=$(workflow/scripts/which_gpu ); "
         "echo GPU$GPU; "
         "{params.bin} "
         "-x cuda:$GPU "
@@ -937,10 +938,10 @@ rule read_length_plots:
 
 
 onsuccess:
-    shell(f"[ -f {gpu_txt} ] && rm {gpu_txt}")
-    print(f"File removed: '{gpu_txt}'")
+    shell(f"[ -f {wait_log} ] && rm {wait_log}")
+    print(f"File removed: '{wait_log}'")
 
 
 onerror:
-    shell(f"[ -f {gpu_txt} ] && rm {gpu_txt}")
-    print(f"File removed: '{gpu_txt}'")
+    shell(f"[ -f {wait_log} ] && rm {wait_log}")
+    print(f"File removed: '{wait_log}'")
