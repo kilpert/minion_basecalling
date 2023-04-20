@@ -8,7 +8,7 @@
 run:
   experiment_id: 001_20220412_FAME3
   ##input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256 # ikim
-  input_dir: /local/work/fkilpert/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
+  input_dir: /local/work/fkilpert/FAME3/raw/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
   sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
   ##sample_sheet: sample_sheets/example.sample_sheet.csv
   barcode_kits:
