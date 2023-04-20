@@ -5,16 +5,18 @@
 
 
 ## FAME3 run1
-# run:
-  # input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
-  # sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
-  # ##sample_sheet: sample_sheets/example.sample_sheet.csv
-  # barcode_kits:
-    # - EXP-NBD196
-  # ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-  # ## flowcell: FLO-MIN106 # starts with "FLO"
-  # ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-  # ## OR:
+run:
+  experiment_id: 001_20220412_FAME3
+  ##input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256 # ikim
+  input_dir: /local/work/fkilpert/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256
+  sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
+  ##sample_sheet: sample_sheets/example.sample_sheet.csv
+  barcode_kits:
+    - EXP-NBD196
+  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  ## flowcell: FLO-MIN106 # starts with "FLO"
+  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  ## OR:
 
 
 ## FAME3 004
@@ -30,17 +32,17 @@
 #  ## OR:
 
 
-## FAME3 Run005
-run:
-  input_dir: /vol/minion/minknow/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84
-  sample_sheet: sample_sheets/Run005_20230321_FAME3_NAA10_Ilaria.sample_sheet.csv
-  ##sample_sheet: sample_sheets/example.sample_sheet.csv
-  barcode_kits:
-    - EXP-NBD196
-  # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-  # flowcell: FLO-MIN106 # starts with "FLO"
-  # library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-  # OR:
+# ## FAME3 Run005
+# run:
+#   input_dir: /vol/minion/minknow/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84
+#   sample_sheet: sample_sheets/Run005_20230321_FAME3_NAA10_Ilaria.sample_sheet.csv
+#   ##sample_sheet: sample_sheets/example.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196
+#   # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#   # flowcell: FLO-MIN106 # starts with "FLO"
+#   # library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#   # OR:
 
 
 ## FAME3 Run006
@@ -69,17 +71,42 @@ guppy_cfg: # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom ta
   - dna_r9.4.1_450bps_sup.cfg
 
 
+# guppy_basecaller:
+#   ## bin: /vol/minion/opt/ont-guppy_6.1.5/bin/guppy_basecaller
+#   ## bin: /vol/minion/opt/ont-guppy_6.2.1/bin/guppy_basecaller
+#   ## bin: /vol/minion/opt/ont-guppy_6.3.4/bin/guppy_basecaller
+#   ont-guppy_6.3.7:
+#     bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+#     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
+#   ont-guppy_6.3.8:
+#     bin: /vol/minion/opt/ont-guppy_6.3.8/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+#     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
+#   ont-guppy_6.4.6:
+#     bin: /vol/minion/opt/ont-guppy_6.4.6/bin/guppy_basecaller # remove --trim_barcodes (on by default)
+#     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder
+
+
+## IKIM
 guppy_basecaller:
-  ## bin: /vol/minion/opt/ont-guppy_6.1.5/bin/guppy_basecaller
-  ## bin: /vol/minion/opt/ont-guppy_6.2.1/bin/guppy_basecaller
-  ## bin: /vol/minion/opt/ont-guppy_6.3.4/bin/guppy_basecaller
-  ont-guppy_6.3.7:
-    bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
-  ont-guppy_6.3.8:
-    bin: /vol/minion/opt/ont-guppy_6.3.8/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
   ont-guppy_6.4.6:
-    bin: /vol/minion/opt/ont-guppy_6.4.6/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-    parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder
+    bin: /projects/humgen/core/opt/ont-guppy/ont-guppy_6.4.6/bin/guppy_basecaller
+    ## --gpu_runners_per_device 64 --chunks_per_caller 20000
+    parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder # 6:32:31
+
+
+## guppy params
+## cfg                      cmdl                      log                   fast  hac   sup
+## gpu_runners_per_device   --gpu_runners_per_device  runners per device    8     4     12
+## chunks_per_runner                                  chunks per runner     160   245   208
+## chunks_per_caller        --chunks_per_caller       NA                    10000 10000 10000
+## NA                       --num_callers 4           num basecallers       NA   NA   NA
+
+## speed
+## auto                                     0:29:18 # minion
+## cuda:5:100%                              1:26:30 # num basecallers: 4 (default)
+## cuda:1:100% --num_callers 8              1:38:09 # num basecallers: 8
+## /local/work/fkilpert (fast)              0:52:41 # g1-2
+## /local/work/fkilpert (fast)              0:47:07 # g1-2
+## /local/work/fkilpert (hac)               2:59:13 # g1-2
+## /local/work/fkilpert (sup)               5:06:59 # g1-2
 
