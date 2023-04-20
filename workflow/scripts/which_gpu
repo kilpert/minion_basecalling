@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+## usage: which_gpu
+## or:
+## which_gpu 2
+
+n="$1"
+
+[ -z "$n" ] && n=1 # n=1 (default)
+
+x=$(nvidia-smi --format=csv --query-gpu=index,utilization.gpu,memory.used | sed 's/,//g' | tail -n+2 | cut -d " " -f1,2,4 | sort -k2,2n -k3,3n | head -"$n" | cut -d" " -f1 | sort | tr "\n" "," | sed 's/,$//')
+
+echo "$x"
+
+

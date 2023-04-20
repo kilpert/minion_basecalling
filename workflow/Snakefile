@@ -10,7 +10,7 @@ import itertools
 try:
     workflow.global_resources["gpu_requests"]
 except:
-    workflow.global_resources["gpu_requests"] = 1
+    workflow.global_resources["gpu_requests"] = 3
 
 
 ## 1st level of config variable definition: config.yaml ################################################################
@@ -47,16 +47,23 @@ cfg_type = config["guppy_cfg"]
 
 
 try:
-    config["run"]["name"] = os.path.basename(config["run"]["input_dir"])
-    run = config["run"]["name"]
+    config["run"]["experiment_id"]
 except:
-    pass
+    config["run"]["experiment_id"] = os.path.basename(config["run"]["input_dir"])
+run = config["run"]["experiment_id"]
 
 
 try:
     guppy = list(config["guppy_basecaller"].keys())
 except:
     guppy = "guppy"
+
+
+try:
+    gpu_txt = config["gpu.txt"]
+except:
+    gpu_txt = os.path.join(results, "gpu.txt")
+
 
 
 ## config ##############################################################################################################
@@ -274,68 +281,68 @@ rule all:
             pass_or_fail=["pass", "fail"],
         ), # one fastq for each barcode or alias
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["summary.txt.gz", "telemetry.js"]
-        ), # gzipped sequencing_summary in fastq dir
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["summary.txt.gz", "telemetry.js"]
+        # ), # gzipped sequencing_summary in fastq dir
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-        ), # pass fastq files
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        # ), # pass fastq files
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-        ), # md5
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        # ), # md5
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["tsv", "html"]
-        ), # flowcell stats on all fastq
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["tsv", "html"]
+        # ), # flowcell stats on all fastq
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-            ext=[".html", "_fastqc.zip"]
-        ), # fastqc
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        #     ext=[".html", "_fastqc.zip"]
+        # ), # fastqc
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-        ), # multiqc
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        # ), # multiqc
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-        ), # read lengths tsv
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        # ), # read lengths tsv
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-        ),
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        # ),
 
 # #         guppy_basecaller_fastq_output,
 # #
@@ -483,21 +490,29 @@ checkpoint guppy_basecaller:
         output_dir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller",
         barcode_kits=f"--barcode_kits {' '.join(config['run']['barcode_kits'])}" if config["run"]["barcode_kits"] else "",
         sample_sheet=f"--sample_sheet {config['run']['sample_sheet']}" if config["run"]["sample_sheet"] else "",
+        n_gpu = 1,
+        ## gpu_txt = "{results}/gpu_txt"
     log:
         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/guppy_basecaller.log"
     benchmark:
         "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller.{guppy}.{run}.{cfg_type}.benchmark.txt"
     resources:
-        gpu_requests=1
+        gpu_requests=1,
     shell:
+        "sleep $[ ( $RANDOM % 30 ) + 1 ]s; " # sleep
+        "GPU=$(workflow/scripts/which_gpu.py {params.n_gpu}); "
+        "echo GPU$GPU; "
         "{params.bin} "
+        "-x cuda:$GPU "
         "{params.parameter} "
         "{params.sample_sheet} "
         "{params.barcode_kits} "
         "--config {wildcards.cfg_type}.cfg " # <---------------------------------------------------------------- use cfg file!!!
         "--input_path {params.input_dir} "
         "--save_path {params.output_dir} "
-        ">{log} 2>&1 "
+        ">{log} 2>&1; "
+        "echo $?; "
+
 
 
 rule guppy_basecaller_fastq:
@@ -575,6 +590,7 @@ rule fastq_md5:
         "{params.indir} "
 
 
+## breaks on ikim!!!
 rule fastq_overview:
     input:
         expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/guppy_basecaller_fastq/{pass_or_fail}",
@@ -919,3 +935,12 @@ rule read_length_plots:
     notebook:
         "notebooks/read_length_plots.ipynb"
 
+
+onsuccess:
+    shell(f"[ -f {gpu_txt} ] && rm {gpu_txt}")
+    print(f"File removed: '{gpu_txt}'")
+
+
+onerror:
+    shell(f"[ -f {gpu_txt} ] && rm {gpu_txt}")
+    print(f"File removed: '{gpu_txt}'")
