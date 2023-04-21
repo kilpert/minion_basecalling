@@ -281,68 +281,76 @@ rule all:
             pass_or_fail=["pass", "fail"],
         ), # one fastq for each barcode or alias
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_{ext}",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     ext=["summary.txt.gz", "telemetry.js"]
-        # ), # gzipped sequencing_summary in fastq dir
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            ext=["summary.txt.gz", "telemetry.js"]
+        ), # gzipped sequencing_summary in fastq dir
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     sample=samples,
-        # ), # pass fastq files
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+        ), # pass fastq files
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        # ), # md5
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+        ), # md5
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     ext=["tsv", "html"]
-        # ), # flowcell stats on all fastq
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            ext=["tsv",]
+        ), # flowcell stats on all fastq
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     sample=samples,
-        #     ext=[".html", "_fastqc.zip"]
-        # ), # fastqc
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            ext=["html",]
+        ), # flowcell stats on all fastq
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     sample=samples,
-        # ), # multiqc
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+            ext=[".html", "_fastqc.zip"]
+        ), # fastqc
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     sample=samples,
-        # ), # read lengths tsv
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+        ), # multiqc
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        # ),
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+            sample=samples,
+        ), # read lengths tsv
+
+        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html",
+            results=results,
+            guppy=guppy,
+            run=run,
+            cfg_type=cfg_type,
+        ),
 
 # #         guppy_basecaller_fastq_output,
 # #
@@ -625,10 +633,11 @@ rule fastq_flowcell_stats_figures:
         run="{run} - {cfg_type}"
     conda:
         "envs/python.yaml"
-    ##log:
-    ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
+    ## log:
+    ##     notebook="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_stats.ipynb"
     notebook:
         "notebooks/minion_basecalling_stats.ipynb"
+
 
 
 # # fastq_input_counter = 0
@@ -829,7 +838,7 @@ rule fastq_fastqc:
     threads:
         2
     wrapper:
-        "v1.14.1/bio/fastqc"
+        "v1.25.0/bio/fastqc"
 
 
 # # def multiqc_input(wildcards):
@@ -857,7 +866,7 @@ rule multiqc:
     log:
         "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
     wrapper:
-        "v1.3.2/bio/multiqc"
+        "v1.25.0/bio/multiqc"
 
 
 # # def fastq_stats_input(wildcards):
