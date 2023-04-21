@@ -107,6 +107,8 @@ guppy_basecaller:
 ## cuda:1:100% --num_callers 8              1:38:09 # num basecallers: 8
 ## /local/work/fkilpert (fast)              0:52:41 # g1-2
 ## /local/work/fkilpert (fast)              0:47:07 # g1-2
+## /local/work/fkilpert (fast)              0:42:01 # all on /local!!
 ## /local/work/fkilpert (hac)               2:59:13 # g1-2
+## /local/work/fkilpert (hac)               2:53:44 # all on /local!!!
 ## /local/work/fkilpert (sup)               5:06:59 # g1-2
-
+## /local/work/fkilpert (sup)               5:02:22 # all on /local!!!
