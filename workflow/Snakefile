@@ -500,7 +500,7 @@ checkpoint guppy_basecaller:
         gpu_requests=1,
     shell:
         "sleep $[ ( $RANDOM % 10 ) + 1 ]s; " # initial sleep
-        "workflow/scripts/wait.sh {params.wait_log}; " # wait.sh
+        "workflow/scripts/wait.sh -l {params.wait_log}; " # wait.sh
         "GPU=$(workflow/scripts/which_gpu ); "
         "echo GPU$GPU; "
         "{params.bin} "
