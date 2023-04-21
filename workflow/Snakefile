@@ -938,10 +938,5 @@ rule read_length_plots:
 
 
 onsuccess:
-    shell(f"[ -f {wait_log} ] && rm {wait_log}")
-    print(f"File removed: '{wait_log}'")
+    shell(f"""if [ -f {wait_log} ]; then rm {wait_log}; echo "File removed: '{wait_log}'"; fi""")
 
-
-onerror:
-    shell(f"[ -f {wait_log} ] && rm {wait_log}")
-    print(f"File removed: '{wait_log}'")
