@@ -52,14 +52,27 @@
 #   # OR:
 
 
-## FAME3 Run006
+# ## FAME3 Run006
+# run:
+#   experiment_id: 006_20230322_FAME3_NAA10_Ilaria
+#   ## input_dir: /vol/minion/minknow/data/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # minion
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim humgen-seq
+#   input_dir: /local/work/fkilpert/FAME3/raw/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim g1-2
+#   sample_sheet: sample_sheets/Run006_20230322_FAME3_NAA10_Ilaria.sample_sheet.csv
+#   ##sample_sheet: sample_sheets/example.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196
+#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#   ## flowcell: FLO-MIN106 # starts with "FLO"
+#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#   ## OR:
+
+
+## FAME3 run007
 run:
-  experiment_id: 006_20230322_FAME3_NAA10_Ilaria
-  ## input_dir: /vol/minion/minknow/data/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # minion
-  ## input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim humgen-seq
-  input_dir: /local/work/fkilpert/FAME3/raw/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim g1-2
-  sample_sheet: sample_sheets/Run006_20230322_FAME3_NAA10_Ilaria.sample_sheet.csv
-  ##sample_sheet: sample_sheets/example.sample_sheet.csv
+  experiment_id: 007_20230614_FGF14_RFC1_FAME_OGT
+  input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/run007_20230614_FGF14_RFC1_FAME_OGT
+  sample_sheet: sample_sheets/run007_20230614_FGF14_RFC1_FAME_OGT.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
