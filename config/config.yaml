@@ -4,7 +4,7 @@
 ## specify path to MinKnow output dir (e.g. 20220412_1232_MN37911_FAR54812_bfd8a256 of format: run_date run_time position flow_cell_id run_id_shorthash)
 
 
-# # FAME3 run1
+# ## FAME3 run1
 # run:
 #   experiment_id: 001_20220412_FAME3
 #   ##input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256 # minion
@@ -36,7 +36,7 @@
 #   ## OR:
 
 
-## FAME3 Run005
+# # FAME3 Run005
 # run:
 #   experiment_id: 005_20230321_FAME3_NAA10_Ilaria
 #   ## input_dir: /vol/minion/minknow/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # minion
@@ -107,6 +107,9 @@ guppy_cfg: # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom ta
 #   ont-guppy_6.4.6:
 #     bin: /vol/minion/opt/ont-guppy_6.4.6/bin/guppy_basecaller # remove --trim_barcodes (on by default)
 #     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder
+
+
+nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
 
 
 ## IKIM

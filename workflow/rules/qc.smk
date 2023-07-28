@@ -1,39 +1,77 @@
+## QC (sequencing_summary.txt)
+
+def sequencing_summary_input(wildcards):
+    return str(checkpoints.guppy_basecaller.get(**wildcards).output["summary_txt"])
+
+
 ## Run QC
 
-def folder_pycoqc_input(wildcards):
-    checkpoint_output = str(checkpoints.guppy_basecaller.get(**wildcards).output[0])
-    return os.path.join(checkpoint_output, "sequencing_summary.txt")
-
-
-rule folder_pycoqc:
+rule folder_pycoQC:
     input:
-        folder_pycoqc_input
+        sequencing_summary_input
     output:
-        html="{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.html",
-        json="{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.json"
+        html="{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.html",
+        json="{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.json"
+    params:
+        extra=config["pycoqc"],
     log:
-        "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.log"
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.log"
     conda:
         "../envs/pycoqc.yaml"
     shell:
         "pycoQC "
+        "{params.extra} "
         "--summary_file {input} "
         "--html_outfile {output.html} "
         "--json_outfile {output.json} "
-        ">{log} 2>&1 "
+        ">'{log}' 2>&1 "
 
+
+## NanoPlot
+
+rule folder_nanoplot:
+    input:
+        sequencing_summary_input
+    output:
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/NanoPlot-report.html",
+    params:
+        outdir="{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/",
+        extra=config["nanoplot"],
+        ## prefix="{run}.{cfg_type}",
+        ## title="{run}.{cfg_type}",
+    log:
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/{run}.{cfg_type}.NanoPlot.log"
+    conda:
+        "../envs/nanoplot.yaml"
+    threads:
+        8
+    shell:
+        "NanoPlot "
+        "-t {threads} "
+        "{params.extra} "
+        "--summary '{input}' "
+        "-o {params.outdir} "
+        ## "--prefix {params.prefix} "
+        ## "--title {params.title} "
+        ">'{log}' 2>&1 "
+        ##"&& touch {output} "
+
+
+## MultiQC
 
 rule run_multiqc:
     input:
-        "{results}/{run}/{cfg_type}/run_qc/PycoQC/{run}.{cfg_type}.sequencing_summary.html"
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.html",
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/NanoPlot-report.html",
     output:
-        "{results}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.multiqc.html"
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.MultiQC.html"
     log:
-        "{results}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.multiqc.log"
+        "{results}/{guppy}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.MultiQC.log"
     params:
-        indir="{results}/{run}/{cfg_type}/run_qc/PycoQC/",
-        outdir="{results}/{run}/{cfg_type}/run_qc/",
-        outfile="{run}.{cfg_type}.multiqc.html"
+        indir_pycoqc="{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/",
+        indir_nanoplot="{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/",
+        outdir="{results}/{guppy}/{run}/{cfg_type}/run_qc/",
+        outfile="{run}.{cfg_type}.MultiQC.html"
     conda:
         "../envs/multiqc.yaml"
     shell:
@@ -41,6 +79,7 @@ rule run_multiqc:
         "--force "
         "--outdir {params.outdir} "
         "--filename {params.outfile} "
-        "{params.indir} "
-        ">{log} 2>&1 "
+        "{params.indir_pycoqc} "
+        "{params.indir_nanoplot} "
+        ">'{log}' 2>&1 "
 

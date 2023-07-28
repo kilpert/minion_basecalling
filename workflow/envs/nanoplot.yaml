@@ -3,4 +3,4 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - pycoqc =2.5.2
+  - nanoplot =1.41.6
