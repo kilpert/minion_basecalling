@@ -72,7 +72,7 @@
 run:
   experiment_id: 007_20230614_FGF14_RFC1_FAME_OGT
   input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/run007_20230614_FGF14_RFC1_FAME_OGT
-  sample_sheet: sample_sheets/run007_20230614_FGF14_RFC1_FAME_OGT.csv
+  sample_sheet: sample_sheets/run007_20230614_FGF14_RFC1_FAME_OGT.v2.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
