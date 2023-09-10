@@ -68,17 +68,43 @@
 #   ## OR:
 
 
-## FAME3 run007
+# ## FAME3 run007
+# run:
+#   experiment_id: 007_20230614_FGF14_RFC1_FAME_OGT
+#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run007_20230614_FGF14_RFC1_FAME_OGT
+#   sample_sheet: sample_sheets/run007_20230614_FGF14_RFC1_FAME_OGT.v2.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196
+#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#   ## flowcell: FLO-MIN106 # starts with "FLO"
+#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#   ## OR:
+
+
+## FAME3 run008
 run:
-  experiment_id: 007_20230614_FGF14_RFC1_FAME_OGT
-  input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run007_20230614_FGF14_RFC1_FAME_OGT
-  sample_sheet: sample_sheets/run007_20230614_FGF14_RFC1_FAME_OGT.v2.sample_sheet.csv
+  experiment_id: run008_20230906_FGF14_NIPBL_OGT_CGI
+  input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run008_20230906_FGF14_NIPBL_OGT_CGI
+  sample_sheet: sample_sheets/run008_20230906_FGF14_NIPBL_OGT_CGI.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
   ## flowcell: FLO-MIN106 # starts with "FLO"
   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
   ## OR:
+
+
+# ## FAME3 run009
+# run:
+#   experiment_id: run009_20230907_FGF14_NIPBL_OGT_CGI
+#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run009_20230907_FGF14_NIPBL_OGT_CGI
+#   sample_sheet: sample_sheets/run009_20230907_FGF14_NIPBL_OGT_CGI.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196
+#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#   ## flowcell: FLO-MIN106 # starts with "FLO"
+#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#   ## OR:
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
