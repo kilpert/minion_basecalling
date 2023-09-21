@@ -120,17 +120,17 @@ run:
    OR:
 
 
-## run011_20230921_FGF14_FAME_NAA10
-run:
-  experiment_id: run011_20230921_FGF14_FAME_NAA10
-  input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run011_20230921_FGF14_FAME_NAA10
-  sample_sheet: sample_sheets/run011_20230921_FGF14_FAME_NAA10.sample_sheet.csv
-  barcode_kits:
-    - EXP-NBD196
-   Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-   flowcell: FLO-MIN106 # starts with "FLO"
-   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-   OR:
+# ## run011_20230921_FGF14_FAME_NAA10
+# run:
+#   experiment_id: run011_20230921_FGF14_FAME_NAA10
+#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run011_20230921_FGF14_FAME_NAA10
+#   sample_sheet: sample_sheets/run011_20230921_FGF14_FAME_NAA10.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196
+#    Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#    flowcell: FLO-MIN106 # starts with "FLO"
+#    library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#    OR:
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
