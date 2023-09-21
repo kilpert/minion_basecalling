@@ -114,11 +114,10 @@ run:
   sample_sheet: sample_sheets/run010_20230920_FGF14_FAME_NAA10.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
-   Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-   flowcell: FLO-MIN106 # starts with "FLO"
-   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-   OR:
-
+  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  flowcell: FLO-MIN106 # starts with "FLO"
+  library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  
 
 # ## run011_20230921_FGF14_FAME_NAA10
 # run:
@@ -127,10 +126,9 @@ run:
 #   sample_sheet: sample_sheets/run011_20230921_FGF14_FAME_NAA10.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
-#    Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#    flowcell: FLO-MIN106 # starts with "FLO"
-#    library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#    OR:
+#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+#   flowcell: FLO-MIN106 # starts with "FLO"
+#   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
 
 ## Internal settings (DO NOT CHANGE!!!) ################################################################################
