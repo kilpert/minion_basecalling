@@ -558,6 +558,8 @@ rule guppy_basecaller_fastq:
         ##outdir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}"
     benchmark:
         "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller_fastq.{pass_or_fail}.benchmark.txt"
+    conda:
+        "envs/pigz.yaml"
     threads:
         4
     shell:
@@ -585,6 +587,8 @@ rule fastq_sequencing_summary:
     output:
         txt="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt.gz",
         js="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_telemetry.js"
+    conda:
+        "envs/pigz.yaml"
     threads:
         4
     shell:
