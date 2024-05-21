@@ -11,7 +11,7 @@ import itertools
 try:
     workflow.global_resources["gpu_requests"]
 except:
-    workflow.global_resources["gpu_requests"] = 3
+    workflow.global_resources["gpu_requests"] = 1
 
 
 ## 1st level of config variable definition: config.yaml ################################################################
@@ -131,143 +131,6 @@ print(f"samples:", samples, len(samples))
 print("{:#^60}".format(" Workflow "))
 
 
-
-#  guppy_basecaller_fastq_output_N = 0
-
-#  def guppy_basecaller_fastq_output(wildcards):
-
-    #  global guppy_basecaller_fastq_output_N
-    #  guppy_basecaller_fastq_output_N += 1
-    #  print(f"guppy_basecaller_fastq_output (#{guppy_basecaller_fastq_output_N})")
-
-    #  paths = []
-
-    #  for g, c in list(itertools.product(guppy, cfg_type)):
-        #  checkpoint_output = checkpoints.guppy_basecaller.get(results=results, guppy=g, run=run, cfg_type=c).output[0]
-        #  w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{alias}/{bname}.fastq.gz")
-        #  print("checkpoint_output:", checkpoint_output)
-
-        #  path = expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/{alias}.fastq.gz",
-            #  results=results,
-            #  guppy=guppy,
-            #  run=run,
-            #  cfg_type=cfg_type,
-            #  pass_or_fail=sorted(list(set(w.pass_or_fail))),
-            #  alias=sorted(list(set(w.alias))),
-        #  )
-
-        #  if path not in paths:
-            #  path = paths.extend(path)
-
-    #  return paths
-
-
-
-# fastq_output_N = 0
-
-# def fastq_output(wildcards):
-#
-#     global fastq_output_N
-#     fastq_output_N += 1
-#     print(f"fastq_output (#{fastq_output_N})")
-#
-#     paths = []
-#
-#     for g, c in list(itertools.product(guppy, cfg_type)):
-#         checkpoint_output = checkpoints.guppy_basecaller.get(results=results, guppy=g, run=run, cfg_type=c).output[0]
-#         w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{alias}.fastq.gz")
-#         print("checkpoint_output:", checkpoint_output)
-#
-#         print("alias:", w.alias)
-#         path = expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{alias}.fastq.gz",
-#             results=results,
-#             guppy=guppy,
-#             run=run,
-#             cfg_type=cfg_type,
-#             alias=[ a for a in sorted(list(set(w.alias))) if a in samples ],
-#         )
-#
-#         if path not in paths:
-#             path = paths.extend(path)
-#
-#     return paths
-
-
-
-# def fastq_output(wildcards):
-#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-#     barcodes = sorted(list(set(w.barcode)))
-#     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-#     ## print("alias:", alias, len(alias))
-#     return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/{alias}.fastq.gz",
-#         results=results,
-#         run=run,
-#         cfg_type=cfg_type,
-#         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-#         alias=alias
-#     )
-#
-# def fastq_fastqc_output(wildcards):
-#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-#     barcodes = sorted(list(set(w.barcode)))
-#     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-#     ## print("alias:", alias, len(alias))
-#     return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/fastqc/{alias}{ext}",
-#         results=results,
-#         run=run,
-#         cfg_type=cfg_type,
-#         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-#         alias=alias,
-#         ext=[".html", "_fastqc.zip"]
-#     )
-#
-#
-# def fastq_multiqc_output(wildcards):
-#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-#     barcodes = sorted(list(set(w.barcode)))
-#     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-#     ## print("alias:", alias, len(alias))
-#     return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/multiqc/{run}.{pass_or_fail}.multiqc.html",
-#         results=results,
-#         run=run,
-#         cfg_type=cfg_type,
-#         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-#     )
-#
-#
-# def read_lengths_output(wildcards):
-#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-#     barcodes = sorted(list(set(w.barcode)))
-#     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-#     ## print("alias:", alias, len(alias))
-#     return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/tsv/{alias}.read_lengths.tsv",
-#         results=results,
-#         run=run,
-#         cfg_type=cfg_type,
-#         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-#         alias=alias
-#     )
-#
-#
-# def read_length_plots_output(wildcards):
-#     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-#     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-#     barcodes = sorted(list(set(w.barcode)))
-#     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-#     ## print("alias:", alias, len(alias))
-#     return expand("{results}/{run}/{cfg_type}/fastq/{pass_or_fail}/read_lengths/{run}.{cfg_type}.{pass_or_fail}.read_lengths.html",
-#         results=results,
-#         run=run,
-#         cfg_type=cfg_type,
-#         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-#         alias=alias
-#     )
-
-
 ## rule all ############################################################################################################
 
 
@@ -350,79 +213,6 @@ rule all:
             sample=samples,
         ), # multiqc
 
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        #     sample=samples,
-        # ), # read lengths tsv
-
-        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     cfg_type=cfg_type,
-        # ),
-
-# #         guppy_basecaller_fastq_output,
-# #
-# #         expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
-# #             results=results,
-# #             guppy=guppy,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #             sample=samples,
-# #         ),
-# #
-# #         expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt",
-# #             results=results,
-# #             guppy=guppy,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #         ),
-#
-#         ##fastq_output,
-#
-# #         expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt",
-# #             results=results,
-# #             guppy=guppy,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #         ), # guppy basecaller
-#
-#
-#
-# #         fastq_output,
-#
-#         ## guppy_basecaller_fastq_alias_output, # temp
-#         ## fastqc_alias_output, # crashes at fail/unclassified by out of memory
-#
-# #         expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.tsv",
-# #             results=results,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #         ),
-# #
-# #         expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.html",
-# #             results=results,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #         ),
-# #
-# #         fastq_output,
-# #         fastq_fastqc_output,
-# #         fastq_multiqc_output,
-# #
-# #         expand("{results}/{run}/{cfg_type}/fastq/{run}.fastq_stats.tsv",
-# #             results=results,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #         ),
-# #
-# #         read_lengths_output,
-# #         read_length_plots_output,
-
         ## pycoQC
         expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.{ext}",
             results=results,
@@ -449,7 +239,7 @@ rule all:
         ),
 
 
-# ## rules ###############################################################################################################
+## rules ###############################################################################################################
 
 rule guppy_basecaller_available_workflows:
     output:
@@ -460,54 +250,6 @@ rule guppy_basecaller_available_workflows:
         "{params.bin} "
         "--print_workflows "
         ">{output} "
-
-
-# # if config["guppy_basecaller"]["cfg_type"] == "flowcell+kit":
-# #     ## flowcell+kit
-# #     rule guppy_basecaller:
-# #         output:
-# #             directory("{results}/{run}/{cfg_type}/guppy_basecaller")
-# #         params:
-# #             bin=config["guppy_basecaller"]["bin"],
-# #             parameter=config["guppy_basecaller"]["parameter"],
-# #             input_dir=config["input_dir"],
-# #             output_dir="{results}/{run}/{cfg_type}/guppy_basecaller",
-# #             flowcell=config["run"]["flowcell"],
-# #             kit=config["run"]["library_prep_kit"],
-# #             sample_sheet=f"--sample_sheet {config['run']['sample_sheet']}" if config["run"]["sample_sheet"] else "",
-# #         log:
-# #             "{results}/{run}/{cfg_type}/guppy_basecaller/{run}.{cfg_type}.guppy_basecaller.log"
-# #         benchmark:
-# #             "{results}/{run}/.benchmark/{run}.{cfg_type}.guppy_basecaller.benchmark.txt"
-# #         shell:
-# #             "{params.bin} "
-# #             "{params.parameter} "
-# #             "{params.sample_sheet} "
-# #             "--flowcell {params.flowcell} "
-# #             "--kit {params.kit} "
-# #             "--input_path {params.input_dir} "
-# #             "--save_path {params.output_dir} "
-# #             ">{log} 2>&1 "
-# # else:
-#
-# # def get_priority(wildcards):
-# #     priorities = {
-# #         "dna_r9.4.1_450bps_fast" : 3,
-# #         "dna_r9.4.1_450bps_hac" : 2,
-# #         "dna_r9.4.1_450bps_sup" : 1,
-# #     }
-# #     return priorities[wildcards.cfg_type]
-#
-#
-# # def get_guppy_input(wc):
-# #     d = { "dna_r9.4.1_450bps_fast" : "",
-# #           "dna_r9.4.1_450bps_hac" : "dna_r9.4.1_450bps_fast",
-# #           "dna_r9.4.1_450bps_sup" : "dna_r9.4.1_450bps_hac"
-# #     }
-# #     prev = d[wc.cfg_type]
-# #     if not prev:
-# #         return []
-# #     return f"{wc.results}/{wc.guppy}/{wc.run}/{prev}/guppy_basecaller/sequencing_summary.txt"
 
 
 ## cfg
@@ -540,12 +282,11 @@ checkpoint guppy_basecaller:
         "{params.parameter} "
         "{params.sample_sheet} "
         "{params.barcode_kits} "
-        "--config {wildcards.cfg_type}.cfg " # <---------------------------------------------------------------- use cfg file!!!
+        "--config {wildcards.cfg_type}.cfg " # <--- use cfg file!!!
         "--input_path {params.input_dir} "
         "--save_path {params.output_dir} "
         ">{log} 2>&1; "
         "echo $?; "
-
 
 
 rule guppy_basecaller_fastq:
@@ -554,8 +295,7 @@ rule guppy_basecaller_fastq:
     output:
         directory("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}")
     params:
-        indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/{pass_or_fail}",
-        ##outdir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}"
+        indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/{pass_or_fail}"
     benchmark:
         "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller_fastq.{pass_or_fail}.benchmark.txt"
     conda:
@@ -566,7 +306,6 @@ rule guppy_basecaller_fastq:
         "[ -d {output} ] || mkdir -p {output}; "
         "( "
         "samples=$(ls -1 {params.indir} | sort); "
-        ##"""echo -e "$samples\n"; """
         "for sample in $samples; do "
         "echo $sample; "
         "fastqs=$(find {params.indir}/$sample -name '*.fastq.gz' | sort); "
@@ -577,7 +316,6 @@ rule guppy_basecaller_fastq:
         "done "
         ") "
         ">{output}/{wildcards.pass_or_fail}.txt "
-
 
 
 rule fastq_sequencing_summary:
@@ -667,194 +405,6 @@ rule fastq_flowcell_stats_figures:
         "notebooks/minion_basecalling_stats.ipynb"
 
 
-
-# # fastq_input_counter = 0
-# #
-# #
-# # def fastq_input(wildcards):
-# #     checkpoint_output = str(checkpoints.guppy_basecaller.get(**wildcards).output[0])
-# #     paths = []
-# #
-# #     for f in glob.glob(checkpoint_output+"/**/*.fastq.gz", recursive=True):
-# #
-# #         m = re.search("/(unclassified|barcode\d+)/", f)
-# #         if m:
-# #             barcode = m.group(1)
-# #         else:
-# #             barcode = None
-# #
-# #         m = re.search("/(pass|fail)/", f)
-# #         if m:
-# #             pass_or_fail = m.group(1)
-# #         else:
-# #             pass_or_fail = None
-# #
-# #         if barcode==wildcards.barcode and pass_or_fail==wildcards.pass_or_fail:
-# #             paths.append(f)
-# #
-# #     paths = sorted(paths)
-# #
-# #     if not paths:
-# #         print(wildcards.barcode)
-# #
-# #     return paths
-#
-# #
-# # fastq_input_N = 0
-# #
-# # def fastq_input(wildcards):
-# #
-# #     global fastq_input_N
-# #     fastq_input_N += 1
-# #     print(f"fastq_input (#{fastq_input_N})")
-# #
-# #     paths = []
-# #
-# #     for g, c in list(itertools.product(guppy, cfg_type)):
-# #         checkpoint_output = checkpoints.guppy_basecaller.get(results=results, guppy=g, run=run, cfg_type=c).output[0]
-# #         print("checkpoint_output:", checkpoint_output)
-# #
-# #         w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-# #
-# #         path = expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{pass_or_fail}/{barcode}.fastq.gz",
-# #             results=results,
-# #             guppy=guppy,
-# #             run=run,
-# #             cfg_type=cfg_type,
-# #             pass_or_fail=sorted(list(set(w.pass_or_fail))),
-# #             barcode=sorted(list(set(w.barcode))),
-# #         )
-# #         ##print(path, len(path))
-# #
-# #         ##for p in path:
-# #         ##    print(p)
-# #
-# #         if path not in paths:
-# #             path = paths.extend(path)
-# #
-# #     return paths
-#
-#
-#
-#
-# # ## concat all fastq files for each barcode
-# # rule guppy_basecaller_fastq:
-# #     input:
-# #         ##"{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller"
-# #         ##fastq_input
-# #         rules.guppy_basecaller.output
-# #         #"{results}/{guppy}/{run}/{cfg_type}/fastq/{pass_or_fail}/{barcode}.fastq.gz"
-# #         ##"{results}/{guppy}/{run}/{cfg_type}/fastq/{pass_or_fail}/{barcode}.done"
-# #     output:
-# #         fastq="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/{barcode}.fastq.gz",
-# #         txt="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/{barcode}.txt",
-# #     threads:
-# #         2
-# #     shell:
-# #         "fastq=$(ls -1 {input}/{wildcards.pass_or_fail}/{wildcards.barcode}/*.fastq.gz | sort); "
-# #         """echo -e "$fastq\n" """
-# #         ">{output.txt}; "
-# #         "zcat $fastq "
-# #         "| pigz -p {threads} --best "
-# #         ">{output.fastq} "
-# #         "|| "
-# #         "echo '' | gzip >{output.fastq} " # fix crash if there are no input files!!!
-#
-#
-# # ## alias ###############################################################################################################
-# #
-# # def guppy_basecaller_fastq_alias_input(wildcards):
-# #     ##print( [wildcards.items] )
-# #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-# #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-# #     barcodes = sorted(list(set(w.barcode)))
-# #     dfl = get_dfl(dfs, barcodes)
-# #     return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}/{barcode}.fastq.gz",
-# #         results=results,
-# #         run=run,
-# #         cfg_type=cfg_type,
-# #         pass_or_fail=wildcards.pass_or_fail,
-# #         barcode=get_barcode(dfl, wildcards.alias)
-# #     )
-# #
-# #
-# # rule guppy_basecaller_fastq_alias:
-# #     input:
-# #         guppy_basecaller_fastq_alias_input
-# #     output:
-# #         temp("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz")
-# #     shell:
-# #         "cp {input} {output} "
-# #
-# #
-# # def fastq_flowcell_stats_input(wildcards):
-# #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-# #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-# #     barcodes = sorted(list(set(w.barcode)))
-# #     dfl = get_dfl(dfs, barcodes)
-# #     alias = [get_alias(dfl, b) for b in barcodes if b in dfl["barcode"].values]
-# #     ## print("alias:", alias, len(alias))
-# #     return expand("{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{pass_or_fail}/{alias}.fastq.gz",
-# #         results=results,
-# #         run=run,
-# #         cfg_type=cfg_type,
-# #         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-# #         alias=alias
-# #     )
-# #
-# #
-# # rule fastq_flowcell_stats:
-# #     input:
-# #         fastq_flowcell_stats_input
-# #     output:
-# #         "{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.tsv"
-# #     shell:
-# #         "( "
-# #         """echo -e "sample\tqc\treads\tbases"; """
-# #         "for f in {input}; do "
-# #         "sample=$(basename ${{f%.fastq.gz}}); "
-# #         "qc=$(basename $(dirname ${{f%.fastq.gz}})); "
-# #         "reads=$(zcat $f | sed -n '1~4p' | wc -l); "
-# #         """bases=$(zcat $f | sed -n '2~4p' | awk 'BEGIN{{FS=""}}{{for(i=1;i<=NF;i++)c++}}END{{print c}}'); """
-# #         """echo -e "$sample\t$qc\t$reads\t$bases"; """
-# #         "done"
-# #         ") "
-# #         ">{output}; "
-# #
-# #
-# # rule fastq_flowcell_stats_figures:
-# #     input:
-# #         tsv="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.tsv"
-# #     output:
-# #         "{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.flowcell.fastq_stats.html"
-# #     params:
-# #         run="{run} - {cfg_type}"
-# #     conda:
-# #         "envs/python.yaml"
-# #     ##log:
-# #     ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
-# #     notebook:
-# #         "notebooks/minion_basecalling_stats.ipynb"
-#
-#
-# # rule fastq:
-# #     input:
-# #         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/pass/{sample}.fastq.gz"
-# #     output:
-# #         "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
-# #     shell:
-# #         "cp {input} {output} "
-#
-#
-# # rule sequencing_summary:
-# #     input:
-# #         rules.guppy_basecaller.output
-# #     output:
-# #         "{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt"
-# #     shell:
-# #         "cp {input}/sequencing_summary.txt {output} "
-
-
 rule fastq_fastqc:
     input:
         "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
@@ -866,19 +416,7 @@ rule fastq_fastqc:
     threads:
         2
     wrapper:
-        "v1.25.0/bio/fastqc"
-
-
-# # def multiqc_input(wildcards):
-# #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-# #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-# #     barcodes = sorted(list(set(w.barcode)))
-# #     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-# #     ## print("alias:", alias, len(alias))
-# #     return expand("{{results}}/{{run}}/{{cfg_type}}/fastq/{pass_or_fail}/fastqc/{alias}_fastqc.zip",
-# #         pass_or_fail=wildcards.pass_or_fail,
-# #         alias=alias,
-# #     )
+        "v3.1.0/bio/fastqc"
 
 
 rule multiqc:
@@ -894,86 +432,5 @@ rule multiqc:
     log:
         "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
     wrapper:
-        "v1.25.0/bio/multiqc"
-
-
-# # def fastq_stats_input(wildcards):
-# #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-# #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-# #     barcodes = sorted(list(set(w.barcode)))
-# #     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-# #     return expand("{{results}}/{{run}}/{{cfg_type}}/fastq/{pass_or_fail}/{alias}.fastq.gz",
-# #         pass_or_fail=sorted(list(set(w.pass_or_fail))),
-# #         alias=alias,
-# #     )
-# #
-# #
-# # rule fastq_stats:
-# #     input:
-# #         fastq_stats_input
-# #     output:
-# #         "{results}/{run}/{cfg_type}/fastq/{run}.fastq_stats.tsv"
-# #     shell:
-# #         "( "
-# #         """echo -e "sample\tqc\treads\tbases"; """
-# #         "for f in {input}; do "
-# #         "sample=$(basename ${{f%.fastq.gz}}); "
-# #         "qc=$(basename $(dirname ${{f%.fastq.gz}})); "
-# #         "reads=$(zcat $f | sed -n '1~4p' | wc -l); "
-# #         """bases=$(zcat $f | sed -n '2~4p' | awk 'BEGIN{{FS=""}}{{for(i=1;i<=NF;i++)c++}}END{{print c}}'); """
-# #         """echo -e "$sample\t$qc\t$reads\t$bases"; """
-# #         "done"
-# #         ") "
-# #         ">{output}; "
-
-
-rule read_lengths:
-    input:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv"
-    shell:
-        "( "
-        "echo -e 'n\tbp'; "
-        "zcat {input} "
-        "| sed -n '2~4p' "
-        "| awk '{{print length}}' "
-        "| sort -n "
-        "| uniq -c"
-        "| sed 's/^ *//g' "
-        "| sed 's/ /\t/' "
-        ") "
-        ">{output} "
-
-
-# # def read_length_plots_input(wildcards):
-# #     checkpoint_output = checkpoints.guppy_basecaller.get(results=results, run=run, cfg_type=cfg_type).output[0]
-# #     w = glob_wildcards(checkpoint_output+"/{pass_or_fail}/{barcode}/{bname}.fastq.gz")
-# #     barcodes = sorted(list(set(w.barcode)))
-# #     alias = [get_alias(dfs, b) for b in barcodes if b in dfs["barcode"].values]
-# #     return expand("{{results}}/{{run}}/{{cfg_type}}/fastq/{{pass_or_fail}}/read_lengths/tsv/{alias}.read_lengths.tsv",
-# #         ##pass_or_fail=sorted(list(set(w.pass_or_fail))),
-# #         alias=alias,
-# #     )
-
-
-rule read_length_plots:
-    input:
-        tsv=expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/qc/read_lengths/tsv/{sample}.read_lengths.tsv",
-            sample=samples,
-        )
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/read_lengths/{run}.{cfg_type}.read_lengths.html"
-    params:
-        run="{run} - {cfg_type}"
-    conda:
-        "envs/python.yaml"
-    ##log:
-    ##    notebook="{results}/{run}/{cfg_type}/guppy_basecaller_fastq_alias/{run}.fastq_stats.ipynb"
-    notebook:
-        "notebooks/read_length_plots.ipynb"
-
-
-onsuccess:
-    shell(f"""if [ -f {wait_log} ]; then rm {wait_log}; echo "File removed: '{wait_log}'"; fi""")
+        "v3.1.0/bio/multiqc"
 
