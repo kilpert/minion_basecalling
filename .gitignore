@@ -3,3 +3,4 @@ results*/
 .snakemake/
 **/guppy_basecaller-core-dump-db/
 .~lock*
+example/
