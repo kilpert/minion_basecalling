@@ -4,200 +4,112 @@
 ## specify path to MinKnow output dir (e.g. 20220412_1232_MN37911_FAR54812_bfd8a256 of format: run_date run_time position flow_cell_id run_id_shorthash)
 
 
-# ## FAME3 run1
-# run:
-#   experiment_id: 001_20220412_FAME3
-#   ##input_dir: /vol/minion/minknow/data/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256 # minion
-#   ##input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256 # ikim humgen-seq
-#   input_dir: /local/work/fkilpert/FAME3/raw/001_20220412_FAME3/no_sample/20220412_1232_MN37911_FAR54812_bfd8a256 # ikim g1-2
-#   sample_sheet: sample_sheets/001_20220412_FAME3.sample_sheet.csv
-#   ##sample_sheet: sample_sheets/example.sample_sheet.csv
-#   barcode_kits:
-#     - EXP-NBD196
-#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   ## flowcell: FLO-MIN106 # starts with "FLO"
-#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#   ## OR:
+## ## run012_20231107_FGF14
+## run:
+##   experiment_id: run012_20231107_FGF14
+##   input_dir: example/run012_20231107_FGF14
+##   sample_sheet: sample_sheets/run012_20231107_FGF14.csv
+##   barcode_kits:
+##     - EXP-NBD196
+##   # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+##   flowcell: FLO-MIN106 # starts with "FLO"
+##   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
 
-# ## FAME3 004
+# ## FAME3 run004
 # run:
 #   experiment_id: 004_20221019_FAME3_DAB1_FGF14_SCA8
-#   ## input_dir: /vol/minion/minknow/data/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # minion
-#   ## input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # ikim humgen-seq
-#   input_dir: /local/work/fkilpert/FAME3/raw/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # ikim g1-2
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # humgen-seq
+#   input_dir: /local/work/fkilpert/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # ikim g1-7
 #   sample_sheet: sample_sheets/004_20221019_FAME3_DAB1_FGF14_SCA8.sample_sheet.csv
-#   ##sample_sheet: sample_sheets/example.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
-#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   ## flowcell: FLO-MIN106 # starts with "FLO"
-#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#   ## OR:
 
-
-# # FAME3 Run005
+# ## FAME3 run005
 # run:
-#   experiment_id: 005_20230321_FAME3_NAA10_Ilaria
-#   ## input_dir: /vol/minion/minknow/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # minion
-#   ## input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # ikim humgen-seq
-#   input_dir: /local/work/fkilpert/FAME3/raw/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # ikim humgen-seq # ikim g1-2
+#   experiment_id: Run005_20230321_FAME3_NAA10_Ilaria
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # humgen-seq
+#   input_dir: /local/work/fkilpert/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # ikim g1-7
 #   sample_sheet: sample_sheets/Run005_20230321_FAME3_NAA10_Ilaria.sample_sheet.csv
-#   ##sample_sheet: sample_sheets/example.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
-#   # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   # flowcell: FLO-MIN106 # starts with "FLO"
-#   # library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#   # OR:
 
-
-# ## FAME3 Run006
+# ## FAME3 run006
 # run:
-#   experiment_id: 006_20230322_FAME3_NAA10_Ilaria
-#   ## input_dir: /vol/minion/minknow/data/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # minion
-#   ## input_dir: /projects/humgen-seq/MinION_Mk1B/device_output/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim humgen-seq
-#   input_dir: /local/work/fkilpert/FAME3/raw/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim g1-2
+#   experiment_id: Run006_20230322_FAME3_NAA10_Ilaria
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # humgen-seq
+#   input_dir: /local/work/fkilpert/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim g1-7
 #   sample_sheet: sample_sheets/Run006_20230322_FAME3_NAA10_Ilaria.sample_sheet.csv
-#   ##sample_sheet: sample_sheets/example.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
-#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   ## flowcell: FLO-MIN106 # starts with "FLO"
-#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#   ## OR:
 
-
-# ## run007 FGF14 FAME
-# run:
-#   experiment_id: 007_20230614_FGF14_RFC1_FAME_OGT
-#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run007_20230614_FGF14_RFC1_FAME_OGT
-#   sample_sheet: sample_sheets/run007_20230614_FGF14_RFC1_FAME_OGT.v3.sample_sheet.csv
-#   barcode_kits:
-#     - EXP-NBD196
-#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   ## flowcell: FLO-MIN106 # starts with "FLO"
-#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#   ## OR:
-
-
-# ## run008 FGF14
-# run:
-#   experiment_id: run008_20230906_FGF14_NIPBL_OGT_CGI
-#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run008_20230906_FGF14_NIPBL_OGT_CGI
-#   sample_sheet: sample_sheets/run008_20230906_FGF14_NIPBL_OGT_CGI.sample_sheet.csv
-#   barcode_kits:
-#     - EXP-NBD196
-#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   ## flowcell: FLO-MIN106 # starts with "FLO"
-#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#   ## OR:
-
-
-# ## run009 FGF14
-# run:
-#   experiment_id: run009_20230907_FGF14_NIPBL_OGT_CGI
-#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run009_20230907_FGF14_NIPBL_OGT_CGI
-#   sample_sheet: sample_sheets/run009_20230907_FGF14_NIPBL_OGT_CGI.sample_sheet.csv
-#   barcode_kits:
-#     - EXP-NBD196
-#    Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#    flowcell: FLO-MIN106 # starts with "FLO"
-#    library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-#    OR:
-
-
-# ## run010_20230920_FGF14_FAME_NAA10
+# ## FAME3 run010
 # run:
 #   experiment_id: run010_20230920_FGF14_FAME_NAA10
-#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run010_20230920_FGF14_FAME_NAA10
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042 # humgen-seq
+#   input_dir: /local/work/fkilpert/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042 # ikim g1-7
 #   sample_sheet: sample_sheets/run010_20230920_FGF14_FAME_NAA10.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
-#   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   flowcell: FLO-MIN106 # starts with "FLO"
-#   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
-  
+# outdir: results.test
 
-# ## run011_20230921_FGF14_FAME_NAA10
+# ## FAME3 run011
 # run:
 #   experiment_id: run011_20230921_FGF14_FAME_NAA10
-#   input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run011_20230921_FGF14_FAME_NAA10
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run011_20230921_FGF14_FAME_NAA10/no_sample/20230921_0913_MN37911_FAW86931_874371bb # humgen-seq
+#   input_dir: /local/work/fkilpert/run011_20230921_FGF14_FAME_NAA10/no_sample/20230921_0913_MN37911_FAW86931_874371bb # ikim g1-7
 #   sample_sheet: sample_sheets/run011_20230921_FGF14_FAME_NAA10.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
+
+
+# ## run013_20240515_MARCHF6
+# run:
+#   experiment_id: run013_20240515_MARCHF6
+#   input_dir: /home/kilpert/sshfs/projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run013_20240515_MARCHF6
+#   sample_sheet:
+#   barcode_kits:
+#     - EXP-NBD196
 #   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-#   flowcell: FLO-MIN106 # starts with "FLO"
-#   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+#   ## flowcell: FLO-MIN106 # starts with "FLO"
+#   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
 
-## run012_20231107_FGF14
+## run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
 run:
-  experiment_id: run012_20231107_FGF14
-  input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run012_20231107_FGF14
-  sample_sheet: sample_sheets/run012_20231107_FGF14.csv
+  experiment_id: run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
+  input_dir: /local/work/fkilpert/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34
+  sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
-  flowcell: FLO-MIN106 # starts with "FLO"
-  library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  ## flowcell: FLO-MIN106 # starts with "FLO"
+  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+
+  
+outdir: results.FGF14
 
 
+## outdir: results # default: 'results' # default
 
-## Internal settings (DO NOT CHANGE!!!) ################################################################################
 
-## Output dir
-# outdir: results # default: 'results'
-
+## workflow settings ###################################################################################################
 
 ## Guppy
-guppy_cfg: # fast or hac or sup; <strand type>_<pore version>_<speed>_<custom tags>.cfg
+guppy_cfg:
   - dna_r9.4.1_450bps_fast.cfg
-  - dna_r9.4.1_450bps_hac.cfg
-  - dna_r9.4.1_450bps_sup.cfg
+  # - dna_r9.4.1_450bps_hac.cfg
+  # - dna_r9.4.1_450bps_sup.cfg
 
 
-# guppy_basecaller:
-#   ## bin: /vol/minion/opt/ont-guppy_6.1.5/bin/guppy_basecaller
-#   ## bin: /vol/minion/opt/ont-guppy_6.2.1/bin/guppy_basecaller
-#   ## bin: /vol/minion/opt/ont-guppy_6.3.4/bin/guppy_basecaller
-#   ont-guppy_6.3.7:
-#     bin: /vol/minion/opt/ont-guppy_6.3.7/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-#     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
-#   ont-guppy_6.3.8:
-#     bin: /vol/minion/opt/ont-guppy_6.3.8/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-#     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 # --trim_barcodes # --nested_output_folder
-#   ont-guppy_6.4.6:
-#     bin: /vol/minion/opt/ont-guppy_6.4.6/bin/guppy_basecaller # remove --trim_barcodes (on by default)
-#     parameter: -x auto --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder
+guppy_basecaller:
+  ## ont-guppy_6.4.6:
+  ##   bin: ../opt/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
+  ##   parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
+  ont-guppy_6.5.7:
+    bin: ../opt/ont-guppy_6.5.7_linux64/bin/guppy_basecaller
+    parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
 
-
-## IKIM
-guppy_basecaller:
-  ont-guppy_6.4.6:
-    bin: /projects/humgen/core/opt/ont-guppy/ont-guppy_6.4.6/bin/guppy_basecaller
-    ## --gpu_runners_per_device 64 --chunks_per_caller 20000
-    parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes # --trim_barcodes # --nested_output_folder # 6:32:31
-
-
-## guppy params
-## cfg                      cmdl                      log                   fast  hac   sup
-## gpu_runners_per_device   --gpu_runners_per_device  runners per device    8     4     12
-## chunks_per_runner                                  chunks per runner     160   245   208
-## chunks_per_caller        --chunks_per_caller       NA                    10000 10000 10000
-## NA                       --num_callers 4           num basecallers       NA   NA   NA
-
-## speed
-## auto                                     0:29:18 # minion
-## cuda:5:100%                              1:26:30 # num basecallers: 4 (default)
-## cuda:1:100% --num_callers 8              1:38:09 # num basecallers: 8
-## /local/work/fkilpert (fast)              0:52:41 # g1-2
-## /local/work/fkilpert (fast)              0:47:07 # g1-2
-## /local/work/fkilpert (fast)              0:42:01 # all on /local!!
-## /local/work/fkilpert (hac)               2:59:13 # g1-2
-## /local/work/fkilpert (hac)               2:53:44 # all on /local!!!
-## /local/work/fkilpert (sup)               5:06:59 # g1-2
-## /local/work/fkilpert (sup)               5:02:22 # all on /local!!!
