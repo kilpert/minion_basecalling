@@ -43,15 +43,17 @@
 #   barcode_kits:
 #     - EXP-NBD196
 
+
 # ## FAME3 run010
 # run:
 #   experiment_id: run010_20230920_FGF14_FAME_NAA10
 #   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042 # humgen-seq
-#   input_dir: /local/work/fkilpert/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042 # ikim g1-7
+#   ## input_dir: /local/work/fkilpert/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042 # ikim g1-7
+#   input_dir: /vol/minion/minknow/data/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042
 #   sample_sheet: sample_sheets/run010_20230920_FGF14_FAME_NAA10.sample_sheet.csv
 #   barcode_kits:
 #     - EXP-NBD196
-# outdir: results.test
+
 
 # ## FAME3 run011
 # run:
@@ -78,8 +80,9 @@
 ## run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
 run:
   experiment_id: run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
-  input_dir: /local/work/fkilpert/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34
-  sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.csv
+  ##input_dir: /local/work/fkilpert/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # g1-9
+  input_dir: /vol/minion/minknow/data/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # minion.local
+  sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
@@ -87,7 +90,7 @@ run:
   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
   
-outdir: results.FGF14
+outdir: results.2024-05-21.FGF14
 
 
 ## outdir: results # default: 'results' # default
@@ -98,8 +101,8 @@ outdir: results.FGF14
 ## Guppy
 guppy_cfg:
   - dna_r9.4.1_450bps_fast.cfg
-  # - dna_r9.4.1_450bps_hac.cfg
-  # - dna_r9.4.1_450bps_sup.cfg
+  - dna_r9.4.1_450bps_hac.cfg
+  - dna_r9.4.1_450bps_sup.cfg
 
 
 guppy_basecaller:
