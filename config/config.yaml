@@ -106,9 +106,9 @@ guppy_cfg:
 
 
 guppy_basecaller:
-  ## ont-guppy_6.4.6:
-  ##   bin: ../opt/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
-  ##   parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
+  ont-guppy_6.4.6:
+    bin: ../opt/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
+    parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
   ont-guppy_6.5.7:
     bin: ../opt/ont-guppy_6.5.7_linux64/bin/guppy_basecaller
     parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
