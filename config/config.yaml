@@ -80,8 +80,8 @@
 ## run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
 run:
   experiment_id: run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
-  ##input_dir: /local/work/fkilpert/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # g1-9
-  input_dir: /vol/minion/minknow/data/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # minion.local
+  input_dir: /local/work/fkilpert/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # g1-9
+  ## input_dir: /vol/minion/minknow/data/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # minion.local
   sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
@@ -107,11 +107,11 @@ guppy_cfg:
 
 guppy_basecaller:
   ont-guppy_6.4.6:
-    bin: ../opt/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
+    bin: opt/ont-guppy/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
     parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
-  ont-guppy_6.5.7:
-    bin: ../opt/ont-guppy_6.5.7_linux64/bin/guppy_basecaller
-    parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
+  ## ont-guppy_6.5.7:
+  ##   bin: opt/ont-guppy/ont-guppy_6.5.7_linux64/bin/guppy_basecaller
+  ##   parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
