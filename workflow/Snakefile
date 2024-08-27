@@ -9,9 +9,9 @@ import itertools
 
 ## Resources ###########################################################################################################
 try:
-    workflow.global_resources["gpu_requests"]
+    workflow.global_resources["gpu_requests"] = config["gpu_requests"]
 except:
-    workflow.global_resources["gpu_requests"] = 2
+    workflow.global_resources["gpu_requests"] = 1
 
 
 ## 1st level of config variable definition: config.yaml ################################################################
@@ -273,13 +273,13 @@ checkpoint guppy_basecaller:
     resources:
         gpu_requests=1,
     shell:
-        "sleep $[ ( $RANDOM % 10 ) + 1 ]s; " # initial sleep
-        "workflow/scripts/wait.sh -l {params.wait_log}; " # wait.sh
-        "GPU=$(workflow/scripts/which_gpu ); "
-        "echo GPU$GPU; "
+        # "sleep $[ ( $RANDOM % 10 ) + 1 ]s; " # initial sleep
+        # "workflow/scripts/wait.sh -l {params.wait_log}; " # wait.sh
+        # "GPU=$(workflow/scripts/which_gpu ); "
+        # "echo GPU$GPU; "
         "{params.bin} "
-        "-x cuda:$GPU "
-        ## "-x cuda:0 "
+        # "-x cuda:$GPU "
+        "-x cuda:0 "
         "{params.parameter} "
         "{params.sample_sheet} "
         "{params.barcode_kits} "
