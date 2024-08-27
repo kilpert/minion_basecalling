@@ -1,0 +1,14 @@
+## run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
+run:
+  experiment_id: run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
+  ## input_dir: /local/work/fkilpert/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # g1-9
+  input_dir: /vol/minion/minknow/data/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # minion.local
+  sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
+  barcode_kits:
+    - EXP-NBD196
+  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  ## flowcell: FLO-MIN106 # starts with "FLO"
+  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+
+  
+outdir: results.2024-05-21.FGF14

@@ -1,0 +1,11 @@
+## ## run012_20231107_FGF14
+## run:
+##   experiment_id: run012_20231107_FGF14
+##   input_dir: example/run012_20231107_FGF14
+##   sample_sheet: sample_sheets/run012_20231107_FGF14.csv
+##   barcode_kits:
+##     - EXP-NBD196
+##   # Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+##   flowcell: FLO-MIN106 # starts with "FLO"
+##   library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+

@@ -1,0 +1,8 @@
+# ## FAME3 run006
+# run:
+#   experiment_id: Run006_20230322_FAME3_NAA10_Ilaria
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # humgen-seq
+#   input_dir: /local/work/fkilpert/Run006_20230322_FAME3_NAA10_Ilaria/no_sample/20230322_1419_MN37911_FAW44853_48d591d7 # ikim g1-7
+#   sample_sheet: sample_sheets/Run006_20230322_FAME3_NAA10_Ilaria.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196

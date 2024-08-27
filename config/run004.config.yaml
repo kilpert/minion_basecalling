@@ -1,0 +1,10 @@
+# ## FAME3 run004
+# run:
+#   experiment_id: 004_20221019_FAME3_DAB1_FGF14_SCA8
+#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # humgen-seq
+#   input_dir: /local/work/fkilpert/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # ikim g1-7
+#   sample_sheet: sample_sheets/004_20221019_FAME3_DAB1_FGF14_SCA8.sample_sheet.csv
+#   barcode_kits:
+#     - EXP-NBD196
+
+
