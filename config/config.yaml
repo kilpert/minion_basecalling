@@ -17,20 +17,24 @@ guppy_basecaller:
 
 
 dorado_basecaller:
-  dorado_0.6.2:
-    bin: opt/dorado/dorado-0.6.2-linux-x64/bin/dorado
-    parameter: 
-    mode:
-      - fast
-      # - hac
-      - sup
+  # dorado_0.6.2:
+  #   bin: opt/dorado/dorado-0.6.2-linux-x64/bin/dorado
+  #   ## extra: --no-trim
+  #   barcode_kit: EXP-NBD196
+  #   sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
+  #   model:
+  #     - fast
+  #     # - hac
+  #     # - sup
   dorado_0.7.3:
     bin: opt/dorado/dorado-0.7.3-linux-x64/bin/dorado
-    parameter: 
-    mode:
+    ## extra: --no-trim
+    barcode_kit: EXP-NBD196
+    sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
+    model:
       - fast
-      - hac
-      - sup
+      # - hac
+      # - sup
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
