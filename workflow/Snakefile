@@ -79,10 +79,22 @@ except:
 
 
 try:
-    config["dorado_cfg"]
+    config["dorado_basecaller"]
 except:
-    config["dorado_cfg"] = ["fast"]
-dorado_cfg = config["dorado_cfg"]
+    config["dorado_basecaller"] = "dorado_basecaller"
+
+
+# try:
+#     dorado = list(config["dorado_basecaller"].keys())
+# except:
+#     dorado = "dorado"
+
+
+for dorado in config["dorado_basecaller"].keys():
+    try:
+        config["dorado_basecaller"][dorado]["mode"]
+    except:
+        config["dorado_basecaller"][dorado]["mode"] = ["fast"]
 
 
 ## config ##############################################################################################################
@@ -247,12 +259,28 @@ rule all:
 
         ## dorado.smk
         ## pod5
-        expand("{results}/{guppy}/{run}/pod5/{run}.{ext}",
+        expand("{results}/{run}/pod5/{run}.{ext}",
             results=results,
             guppy=guppy,
             run=run,
             ext=["pod5", "summary.tsv.gz"]
         ),
+
+        [ expand("{results}/{run}/{dorado}/{mode}/{run}.{mode}.dorado.bam",
+                results=results,
+                dorado=dorado,
+                mode=config["dorado_basecaller"][dorado]["mode"],
+                run=run,
+            ) for dorado in config["dorado_basecaller"].keys()
+        ]
+
+        # expand("{results}/{run}/{dorado}/{mode}/{run}.mode.dorado.bam",
+        #     results=results,
+        #     dorado=dorado,
+        #     run=run,
+        #     mode=config["dorado_basecaller"]["dorado"]["mode"],
+        # ),
+
 
 
 
