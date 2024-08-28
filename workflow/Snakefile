@@ -78,6 +78,12 @@ except:
     wait_log = os.path.join(results, "wait.log")
 
 
+try:
+    config["dorado_cfg"]
+except:
+    config["dorado_cfg"] = ["fast"]
+dorado_cfg = config["dorado_cfg"]
+
 
 ## config ##############################################################################################################
 
@@ -114,6 +120,7 @@ def get_barcode(df, alias):
 
 ## include #############################################################################################################
 
+include: "rules/dorado.smk"
 include: "rules/qc.smk"
 
 
@@ -237,6 +244,16 @@ rule all:
             run=run,
             cfg_type=cfg_type,
         ),
+
+        ## dorado.smk
+        ## pod5
+        expand("{results}/{guppy}/{run}/pod5/{run}.{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            ext=["pod5", "summary.tsv.gz"]
+        ),
+
 
 
 ## rules ###############################################################################################################
