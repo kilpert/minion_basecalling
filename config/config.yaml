@@ -16,5 +16,12 @@ guppy_basecaller:
     parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
 
 
+## Dorado
+dorado_cfg:
+  - fast
+  # - hac
+  # - sup
+
+
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
 
