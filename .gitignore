@@ -5,3 +5,4 @@ results*/
 .~lock*
 example/
 opt
+.temp*/
