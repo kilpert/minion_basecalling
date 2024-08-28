@@ -29,20 +29,61 @@ rule dorado:
     input:
         rules.pod5.output.pod5
     output:
-        "{results}/{run}/{dorado}/{mode}/{run}.{mode}.dorado.bam"
+        bam="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.bam",
+        tsv="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.summary.tsv.gz"
     params:
-        bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"]
+        bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
+        extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
+        barcode_kit=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["barcode_kit"],
+        ## sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
+        ## outdir="{results}/{run}/{dorado}/{model}/dorado",
     log:
-        "{results}/{run}/{dorado}/{mode}/{run}.{mode}.dorado.log"
+        "{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.log"
     benchmark:
-        "{results}/{run}/.benchmark/dorado.{dorado}.{run}.{mode}.benchmark.txt"
+        "{results}/{run}/.benchmark/dorado.{dorado}.{run}.{model}.benchmark.txt"
     resources:
         gpu_requests=1
+    threads:
+        8
     shell:
-        ##"touch {output} "
         "{params.bin} basecaller "
-        "{wildcards.mode} "
+        "{wildcards.model} "
+        "{params.extra} "
+        "--kit-name {params.barcode_kit} "
+        ##"--sample-sheet {params.sample_sheet} "
         "{input} "
-        ">{output} "
-        "2>{log} "
+        ">{output.bam} "
+        "2>{log}; "
+        "{params.bin} summary "
+        "{output.bam} "
+        "2>>{log} "
+        "| pigz --best -p {threads} "
+        ">{output.tsv} "
 
+
+checkpoint dorado_demux:
+    input:
+        rules.dorado.output.bam
+    output:
+        directory("{results}/{run}/{dorado}/{model}/demux/")
+    params:
+        bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
+        extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
+        outdir="{results}/{run}/{dorado}/{model}/demux/",
+        barcode_kit=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["barcode_kit"],
+        sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
+    log:
+        "{results}/{run}/{dorado}/{model}/demux/{run}.{model}.demux.log"
+    benchmark:
+        "{results}/{run}/.benchmark/demux.{dorado}.{run}.{model}.benchmark.txt"
+    resources:
+        gpu_requests=1
+    threads:
+        8
+    shell:
+        "{params.bin} demux "
+        "--kit-name {params.barcode_kit} "
+        "--sample-sheet {params.sample_sheet} "
+        "--output-dir {params.outdir} "
+        "{input} "
+        "2>{log} "

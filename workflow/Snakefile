@@ -97,6 +97,13 @@ for dorado in config["dorado_basecaller"].keys():
         config["dorado_basecaller"][dorado]["mode"] = ["fast"]
 
 
+for dorado in config["dorado_basecaller"].keys():
+    try:
+        config["dorado_basecaller"][dorado]["extra"]
+    except:
+        config["dorado_basecaller"][dorado]["extra"] = "--no-trim"
+
+
 ## config ##############################################################################################################
 
 print("{:#^60}".format(" Config "))
@@ -266,21 +273,22 @@ rule all:
             ext=["pod5", "summary.tsv.gz"]
         ),
 
-        [ expand("{results}/{run}/{dorado}/{mode}/{run}.{mode}.dorado.bam",
+        [ expand("{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.{ext}",
                 results=results,
                 dorado=dorado,
-                mode=config["dorado_basecaller"][dorado]["mode"],
+                model=config["dorado_basecaller"][dorado]["model"],
+                run=run,
+                ext=["bam", "summary.tsv.gz"]
+            ) for dorado in config["dorado_basecaller"].keys()
+        ],
+
+        [ expand("{results}/{run}/{dorado}/{model}/demux",
+                results=results,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"],
                 run=run,
             ) for dorado in config["dorado_basecaller"].keys()
-        ]
-
-        # expand("{results}/{run}/{dorado}/{mode}/{run}.mode.dorado.bam",
-        #     results=results,
-        #     dorado=dorado,
-        #     run=run,
-        #     mode=config["dorado_basecaller"]["dorado"]["mode"],
-        # ),
-
+        ], 
 
 
 
