@@ -129,3 +129,18 @@ rule dorado_fastq:
         "2>{log} "
         "-c 9 "
         "-0 {output} "
+
+
+rule dorado_fastq_md5:
+    input:
+        expand("{{results}}/{{run}}/{{dorado}}/{{model}}/fastq/{sample}.fastq.gz",
+            sample=samples,
+        )
+    output:
+        "{results}/{run}/{dorado}/{model}/fastq/checksum.md5"
+    params:
+        indir="{results}/{run}/{dorado}/{model}/fastq/"
+    shell:
+        ""
+        "bash workflow/scripts/md5_make "
+        "{params.indir} "

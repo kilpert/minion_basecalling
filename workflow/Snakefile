@@ -205,6 +205,16 @@ def run_dorado():
             )
         )
 
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/fastq/checksum.md5",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"],
+            )
+        )
+
+
     return file_list
 
 
