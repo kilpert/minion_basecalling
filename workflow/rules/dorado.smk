@@ -16,7 +16,7 @@ rule pod5:
         "pod5 convert fast5 "
         "--strict "
         "--threads {threads} "
-        "$(find {input} -name '*.fast5' | sort | head -1) "
+        "$(find {input} -name '*.fast5' | sort) "
         "--output {output.pod5} "
         ">{log} 2>&1; "
         "pod5 view "
