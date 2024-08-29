@@ -206,7 +206,7 @@ def run_dorado():
         )
 
         file_list.append(
-            expand("{results}/{run}/{dorado}/{model}/fastq/fastqc/{sample}{ext}",
+            expand("{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}{ext}",
                 results=results,
                 run=run,
                 dorado=dorado,

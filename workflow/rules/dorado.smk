@@ -141,7 +141,6 @@ rule dorado_fastq_md5:
     params:
         indir="{results}/{run}/{dorado}/{model}/fastq/"
     shell:
-        ""
         "bash workflow/scripts/md5_make "
         "{params.indir} "
 
