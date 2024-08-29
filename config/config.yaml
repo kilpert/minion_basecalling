@@ -34,8 +34,13 @@ dorado_basecaller:
     model:
       - fast
       # - hac
-      # - sup
+      - sup
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
+
+
+
+## Optional: Only process n fast5 files
+test: "| head -1"
 

@@ -4,6 +4,8 @@ rule pod5:
     output:
         pod5="{results}/{run}/pod5/{run}.pod5",
         summary="{results}/{run}/pod5/{run}.summary.tsv.gz"
+    params:
+        test=config["test"] if config["test"] else "",
     log:
         "{results}/{run}/pod5/{run}.pod5.log"
     benchmark:
@@ -16,7 +18,7 @@ rule pod5:
         "pod5 convert fast5 "
         "--strict "
         "--threads {threads} "
-        "$(find {input} -name '*.fast5' | sort) "
+        "$(find {input} -name '*.fast5' | sort {params.test}) "
         "--output {output.pod5} "
         ">{log} 2>&1; "
         "pod5 view "
