@@ -104,6 +104,12 @@ for dorado in config["dorado_basecaller"].keys():
         config["dorado_basecaller"][dorado]["extra"] = "--no-trim"
 
 
+try:
+    config["test"]
+except:
+    config["test"] = ""
+
+
 ## config ##############################################################################################################
 
 print("{:#^60}".format(" Config "))
@@ -146,8 +152,8 @@ include: "rules/qc.smk"
 ## variables ###########################################################################################################
 print("{:#^60}".format(" Variables "))
 print(f"results: {results}")
-print(f"guppy: {guppy}")
-print(f"cfg_type: {cfg_type}")
+# print(f"guppy: {guppy}")
+# print(f"cfg_type: {cfg_type}")
 print(f"run: {run}")
 samples.append("unclassified")
 print(f"samples:", samples, len(samples))
