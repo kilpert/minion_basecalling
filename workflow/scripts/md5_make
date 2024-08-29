@@ -3,4 +3,4 @@
 [ -d "$1" ] && cd "$1"
 
 dname=$(basename $PWD)
-find . -type f \( -name "*.fastq.gz" -o -name "sequencing_*" \) ! -path "./${dname}.md5" -exec md5sum "{}" + >"${dname}.md5"
+find . -type f \( -name "*.fastq.gz" -o -name "sequencing_*" \) ! -path "./${dname}.md5" -exec md5sum "{}" + | sort -k2,2 >"checksum.md5"
