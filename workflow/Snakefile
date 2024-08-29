@@ -185,7 +185,6 @@ def run_dorado():
             )
         )
 
-
         file_list.append(
             expand("{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz",
                 results=results,
@@ -225,6 +224,15 @@ def run_dorado():
             )
         )
 
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.{ext}",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"],
+                ext=["html", "json"]
+            )
+        )
 
     return file_list
 

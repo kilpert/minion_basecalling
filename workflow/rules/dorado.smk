@@ -173,3 +173,24 @@ rule dorado_multiqc:
     wrapper:
         "v3.1.0/bio/multiqc"
 
+
+rule dorado_pycoQC:
+    input:
+        rules.dorado_basecaller.output.tsv
+    output:
+        html="{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.html",
+        json="{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.json"
+    params:
+        extra=config["pycoqc"],
+    log:
+        "{results}/{run}/{dorado}/{model}/log/{run}.{model}.pycoQC.log"
+    conda:
+        "../envs/pycoqc.yaml"
+    shell:
+        "pycoQC "
+        "{params.extra} "
+        "--summary_file {input} "
+        "--html_outfile {output.html} "
+        "--json_outfile {output.json} "
+        ">'{log}' 2>&1 "
+
