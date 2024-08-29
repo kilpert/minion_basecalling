@@ -185,15 +185,6 @@ def run_dorado():
             )
         )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/trim/{sample}.bam",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"],
-        #         sample=samples,
-        #     )
-        # )
 
         file_list.append(
             expand("{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz",
