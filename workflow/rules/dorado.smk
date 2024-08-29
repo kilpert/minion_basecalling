@@ -144,3 +144,33 @@ rule dorado_fastq_md5:
         ""
         "bash workflow/scripts/md5_make "
         "{params.indir} "
+
+
+rule dorado_fastq_fastqc:
+    input:
+        rules.dorado_fastq.output
+    output:
+        html="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}.html",
+        zip="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
+    params:
+        "--quiet"
+    threads:
+        2
+    wrapper:
+        "v3.1.0/bio/fastqc"
+
+
+rule dorado_multiqc:
+    input:
+        expand("{{results}}/{{run}}/{{dorado}}/{{model}}/qc/fastqc/{sample}_fastqc.zip",
+            sample=samples,
+        )
+    output:
+        "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.html"
+    params:
+        ""  # Optional: extra parameters for multiqc.
+    log:
+        "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.log"
+    wrapper:
+        "v3.1.0/bio/multiqc"
+

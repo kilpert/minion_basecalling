@@ -214,6 +214,26 @@ def run_dorado():
             )
         )
 
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/fastq/fastqc/{sample}{ext}",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"],
+                sample=samples,
+                ext=[".html", "_fastqc.zip"]
+            )
+        )
+
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.html",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"],
+            )
+        )
+
 
     return file_list
 
