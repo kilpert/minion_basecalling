@@ -149,7 +149,9 @@ print(f"results: {results}")
 print(f"guppy: {guppy}")
 print(f"cfg_type: {cfg_type}")
 print(f"run: {run}")
+samples.append("unclassified")
 print(f"samples:", samples, len(samples))
+
 
 
 ## snakemake: all ######################################################################################################
@@ -159,332 +161,366 @@ print("{:#^60}".format(" Workflow "))
 
 ## rule all ############################################################################################################
 
+def run_dorado():
+    file_list = []
 
-rule all:
-    input:
-        expand("{results}/{guppy}/guppy_basecaller.available_workflows.txt",
-            results=results,
-            guppy=guppy,
-        ), # guppy basecaller available workflows
+    for dorado in config["dorado_basecaller"].keys():
 
-        expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["_summary.txt", "_telemetry.js"]
-        ), # guppy basecaller directory
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            pass_or_fail=["pass", "fail"],
-        ), # one fastq for each barcode or alias
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["summary.txt.gz", "telemetry.js"]
-        ), # gzipped sequencing_summary in fastq dir
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-        ), # pass fastq files
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-        ), # md5
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["tsv",]
-        ), # flowcell stats on all fastq
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["html",]
-        ), # flowcell stats on all fastq
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-            ext=[".html", "_fastqc.zip"]
-        ), # fastqc
-
-        expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            sample=samples,
-        ), # multiqc
-
-        ## pycoQC
-        expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-            ext=["html", "json"]
-        ),
-
-        ## NanoPlot
-        expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/NanoPlot-report.html",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-        ),
-
-        ## MultiQC
-        expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.MultiQC.html",
-            results=results,
-            guppy=guppy,
-            run=run,
-            cfg_type=cfg_type,
-        ),
-
-        ## dorado.smk
-        ## pod5
-        expand("{results}/{run}/pod5/{run}.{ext}",
-            results=results,
-            guppy=guppy,
-            run=run,
-            ext=["pod5", "summary.tsv.gz"]
-        ),
-
-        [ expand("{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.{ext}",
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.{ext}",
                 results=results,
                 dorado=dorado,
                 model=config["dorado_basecaller"][dorado]["model"],
                 run=run,
                 ext=["bam", "summary.tsv.gz"]
-            ) for dorado in config["dorado_basecaller"].keys()
-        ],
+            )
+        )
 
-        [ expand("{results}/{run}/{dorado}/{model}/demux",
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/demux",
                 results=results,
                 dorado=dorado,
                 model=config["dorado_basecaller"][dorado]["model"],
                 run=run,
-            ) for dorado in config["dorado_basecaller"].keys()
-        ], 
+            )
+        )
+
+        # file_list.append(
+        #     expand("{results}/{run}/{dorado}/{model}/trim/{sample}.bam",
+        #         results=results,
+        #         run=run,
+        #         dorado=dorado,
+        #         model=config["dorado_basecaller"][dorado]["model"],
+        #         sample=samples,
+        #     )
+        # )
+
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"],
+                sample=samples,
+            )
+        )
+
+    return file_list
+
+
+
+
+rule all:
+    input:
+        run_dorado(),
+
+        # expand("{results}/{guppy}/guppy_basecaller.available_workflows.txt",
+        #     results=results,
+        #     guppy=guppy,
+        # ), # guppy basecaller available workflows
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["_summary.txt", "_telemetry.js"]
+        # ), # guppy basecaller directory
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     pass_or_fail=["pass", "fail"],
+        # ), # one fastq for each barcode or alias
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["summary.txt.gz", "telemetry.js"]
+        # ), # gzipped sequencing_summary in fastq dir
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        # ), # pass fastq files
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        # ), # md5
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["tsv",]
+        # ), # flowcell stats on all fastq
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["html",]
+        # ), # flowcell stats on all fastq
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        #     ext=[".html", "_fastqc.zip"]
+        # ), # fastqc
+
+        # expand("{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     sample=samples,
+        # ), # multiqc
+
+        # ## pycoQC
+        # expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/pycoQC/{run}.{cfg_type}.pycoQC.{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        #     ext=["html", "json"]
+        # ),
+
+        # ## NanoPlot
+        # expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/NanoPlot-report.html",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        # ),
+
+        # ## MultiQC
+        # expand("{results}/{guppy}/{run}/{cfg_type}/run_qc/{run}.{cfg_type}.MultiQC.html",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     cfg_type=cfg_type,
+        # ),
+
+        # ## dorado.smk
+        # ## pod5
+        # expand("{results}/{run}/pod5/{run}.{ext}",
+        #     results=results,
+        #     guppy=guppy,
+        #     run=run,
+        #     ext=["pod5", "summary.tsv.gz"]
+        # ),
+
 
 
 
 ## rules ###############################################################################################################
 
-rule guppy_basecaller_available_workflows:
-    output:
-        "{results}/{guppy}/guppy_basecaller.available_workflows.txt"
-    params:
-        bin=lambda wildcards: config["guppy_basecaller"][wildcards.guppy]["bin"],
-    shell:
-        "{params.bin} "
-        "--print_workflows "
-        ">{output} "
+# rule guppy_basecaller_available_workflows:
+#     output:
+#         "{results}/{guppy}/guppy_basecaller.available_workflows.txt"
+#     params:
+#         bin=lambda wildcards: config["guppy_basecaller"][wildcards.guppy]["bin"],
+#     shell:
+#         "{params.bin} "
+#         "--print_workflows "
+#         ">{output} "
 
 
-## cfg
-checkpoint guppy_basecaller:
-    output:
-        summary_txt="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt",
-        telemetry_js="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_telemetry.js"
-    params:
-        bin=lambda wildcards: config["guppy_basecaller"][wildcards.guppy]["bin"],
-        parameter=lambda wildcards: config["guppy_basecaller"][wildcards.guppy]["parameter"],
-        input_dir=config["run"]["input_dir"],
-        output_dir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller",
-        barcode_kits=f"--barcode_kits {' '.join(config['run']['barcode_kits'])}" if config["run"]["barcode_kits"] else "",
-        sample_sheet=f"--sample_sheet {config['run']['sample_sheet']}" if config["run"]["sample_sheet"] else "",
-        n_gpu = 1,
-        wait_log=wait_log,
-    log:
-        "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/guppy_basecaller.log"
-    benchmark:
-        "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller.{guppy}.{run}.{cfg_type}.benchmark.txt"
-    resources:
-        gpu_requests=1,
-    shell:
-        # "sleep $[ ( $RANDOM % 10 ) + 1 ]s; " # initial sleep
-        # "workflow/scripts/wait.sh -l {params.wait_log}; " # wait.sh
-        # "GPU=$(workflow/scripts/which_gpu ); "
-        # "echo GPU$GPU; "
-        "{params.bin} "
-        # "-x cuda:$GPU "
-        "-x cuda:0 "
-        "{params.parameter} "
-        "{params.sample_sheet} "
-        "{params.barcode_kits} "
-        "--config {wildcards.cfg_type}.cfg " # <--- use cfg file!!!
-        "--input_path {params.input_dir} "
-        "--save_path {params.output_dir} "
-        ">{log} 2>&1; "
-        "echo $?; "
+# ## cfg
+# checkpoint guppy_basecaller:
+#     output:
+#         summary_txt="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt",
+#         telemetry_js="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_telemetry.js"
+#     params:
+#         bin=lambda wildcards: config["guppy_basecaller"][wildcards.guppy]["bin"],
+#         parameter=lambda wildcards: config["guppy_basecaller"][wildcards.guppy]["parameter"],
+#         input_dir=config["run"]["input_dir"],
+#         output_dir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller",
+#         barcode_kits=f"--barcode_kits {' '.join(config['run']['barcode_kits'])}" if config["run"]["barcode_kits"] else "",
+#         sample_sheet=f"--sample_sheet {config['run']['sample_sheet']}" if config["run"]["sample_sheet"] else "",
+#         n_gpu = 1,
+#         wait_log=wait_log,
+#     log:
+#         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/guppy_basecaller.log"
+#     benchmark:
+#         "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller.{guppy}.{run}.{cfg_type}.benchmark.txt"
+#     resources:
+#         gpu_requests=1,
+#     shell:
+#         # "sleep $[ ( $RANDOM % 10 ) + 1 ]s; " # initial sleep
+#         # "workflow/scripts/wait.sh -l {params.wait_log}; " # wait.sh
+#         # "GPU=$(workflow/scripts/which_gpu ); "
+#         # "echo GPU$GPU; "
+#         "{params.bin} "
+#         # "-x cuda:$GPU "
+#         "-x cuda:0 "
+#         "{params.parameter} "
+#         "{params.sample_sheet} "
+#         "{params.barcode_kits} "
+#         "--config {wildcards.cfg_type}.cfg " # <--- use cfg file!!!
+#         "--input_path {params.input_dir} "
+#         "--save_path {params.output_dir} "
+#         ">{log} 2>&1; "
+#         "echo $?; "
 
 
-rule guppy_basecaller_fastq:
-    input:
-        "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
-    output:
-        directory("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}")
-    params:
-        indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/{pass_or_fail}"
-    benchmark:
-        "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller_fastq.{pass_or_fail}.benchmark.txt"
-    conda:
-        "envs/pigz.yaml"
-    threads:
-        4
-    shell:
-        "[ -d {output} ] || mkdir -p {output}; "
-        "( "
-        "samples=$(ls -1 {params.indir} | sort); "
-        "for sample in $samples; do "
-        "echo $sample; "
-        "fastqs=$(find {params.indir}/$sample -name '*.fastq.gz' | sort); "
-        """echo -e "$fastqs\n"; """
-        "zcat $fastqs "
-        "| pigz -p {threads} --best "
-        ">{output}/${{sample}}.fastq.gz; "
-        "done "
-        ") "
-        ">{output}/{wildcards.pass_or_fail}.txt "
+# rule guppy_basecaller_fastq:
+#     input:
+#         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt"
+#     output:
+#         directory("{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/{pass_or_fail}")
+#     params:
+#         indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/{pass_or_fail}"
+#     benchmark:
+#         "{results}/{guppy}/{run}/{cfg_type}/.benchmark/guppy_basecaller_fastq.{pass_or_fail}.benchmark.txt"
+#     conda:
+#         "envs/pigz.yaml"
+#     threads:
+#         4
+#     shell:
+#         "[ -d {output} ] || mkdir -p {output}; "
+#         "( "
+#         "samples=$(ls -1 {params.indir} | sort); "
+#         "for sample in $samples; do "
+#         "echo $sample; "
+#         "fastqs=$(find {params.indir}/$sample -name '*.fastq.gz' | sort); "
+#         """echo -e "$fastqs\n"; """
+#         "zcat $fastqs "
+#         "| pigz -p {threads} --best "
+#         ">{output}/${{sample}}.fastq.gz; "
+#         "done "
+#         ") "
+#         ">{output}/{wildcards.pass_or_fail}.txt "
 
 
-rule fastq_sequencing_summary:
-    input:
-        txt="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt",
-        js="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_telemetry.js"
-    output:
-        txt="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt.gz",
-        js="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_telemetry.js"
-    conda:
-        "envs/pigz.yaml"
-    threads:
-        4
-    shell:
-        "cat {input.txt} "
-        "| pigz -p {threads} --best "
-        ">{output.txt}; "
-        "cp {input.js} {output.js} "
+# rule fastq_sequencing_summary:
+#     input:
+#         txt="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_summary.txt",
+#         js="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller/sequencing_telemetry.js"
+#     output:
+#         txt="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt.gz",
+#         js="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_telemetry.js"
+#     conda:
+#         "envs/pigz.yaml"
+#     threads:
+#         4
+#     shell:
+#         "cat {input.txt} "
+#         "| pigz -p {threads} --best "
+#         ">{output.txt}; "
+#         "cp {input.js} {output.js} "
 
 
-rule fastq:
-    input:
-        "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/pass"
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
-    params:
-        outdir="{results}/{guppy}/{run}/{cfg_type}/fastq"
-    shell:
-        "cp {input}/{wildcards.sample}.fastq.gz "
-        "{params.outdir} "
+# rule fastq:
+#     input:
+#         "{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq/pass"
+#     output:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
+#     params:
+#         outdir="{results}/{guppy}/{run}/{cfg_type}/fastq"
+#     shell:
+#         "cp {input}/{wildcards.sample}.fastq.gz "
+#         "{params.outdir} "
 
 
-rule fastq_md5:
-    input:
-        fastq=expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/{sample}.fastq.gz",
-            sample=samples,
-        ),
-        txt_gz="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt.gz",
-        js="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_telemetry.js",
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5"
-    params:
-        indir="{results}/{guppy}/{run}/{cfg_type}/fastq"
-    shell:
-        ""
-        "bash workflow/scripts/md5_make "
-        "{params.indir} "
+# rule fastq_md5:
+#     input:
+#         fastq=expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/{sample}.fastq.gz",
+#             sample=samples,
+#         ),
+#         txt_gz="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_summary.txt.gz",
+#         js="{results}/{guppy}/{run}/{cfg_type}/fastq/sequencing_telemetry.js",
+#     output:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/fastq.md5"
+#     params:
+#         indir="{results}/{guppy}/{run}/{cfg_type}/fastq"
+#     shell:
+#         ""
+#         "bash workflow/scripts/md5_make "
+#         "{params.indir} "
 
 
-## breaks on ikim!!!
-rule fastq_overview:
-    input:
-        expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/guppy_basecaller_fastq/{pass_or_fail}",
-            pass_or_fail=["pass", "fail"]
-        )
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.tsv"
-    params:
-        indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq"
-    shell:
-        "( "
-        """echo -e "sample\tqc\treads\tbases"; """
-        "fastqs=$(find {params.indir} -name '*.fastq.gz' | sort); "
-        "for f in $fastqs; do "
-        "qc=$(dirname $f | xargs basename); "
-        "sample=$(basename ${{f%.fastq.gz}}); "
-        "reads=$(zcat $f | sed -n '1~4p' | wc -l); "
-        """bases=$(zcat $f | sed -n '2~4p' | awk 'BEGIN{{FS=""}}{{for(i=1;i<=NF;i++)c++}}END{{print c}}'); """
-        """echo -e "$sample\t$qc\t$reads\t$bases"; """
-        "done; "
-        ") "
-        ">{output}; "
+# ## breaks on ikim!!!
+# rule fastq_overview:
+#     input:
+#         expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/guppy_basecaller_fastq/{pass_or_fail}",
+#             pass_or_fail=["pass", "fail"]
+#         )
+#     output:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.tsv"
+#     params:
+#         indir="{results}/{guppy}/{run}/{cfg_type}/guppy_basecaller_fastq"
+#     shell:
+#         "( "
+#         """echo -e "sample\tqc\treads\tbases"; """
+#         "fastqs=$(find {params.indir} -name '*.fastq.gz' | sort); "
+#         "for f in $fastqs; do "
+#         "qc=$(dirname $f | xargs basename); "
+#         "sample=$(basename ${{f%.fastq.gz}}); "
+#         "reads=$(zcat $f | sed -n '1~4p' | wc -l); "
+#         """bases=$(zcat $f | sed -n '2~4p' | awk 'BEGIN{{FS=""}}{{for(i=1;i<=NF;i++)c++}}END{{print c}}'); """
+#         """echo -e "$sample\t$qc\t$reads\t$bases"; """
+#         "done; "
+#         ") "
+#         ">{output}; "
 
 
-rule fastq_flowcell_stats_figures:
-    input:
-        tsv="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.tsv"
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.html"
-    params:
-        run="{run} - {cfg_type}"
-    conda:
-        "envs/python.yaml"
-    ## log:
-    ##     notebook="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_stats.ipynb"
-    notebook:
-        "notebooks/minion_basecalling_stats.ipynb"
+# rule fastq_flowcell_stats_figures:
+#     input:
+#         tsv="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.tsv"
+#     output:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_overview.html"
+#     params:
+#         run="{run} - {cfg_type}"
+#     conda:
+#         "envs/python.yaml"
+#     ## log:
+#     ##     notebook="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastq_overview/{run}.fastq_stats.ipynb"
+#     notebook:
+#         "notebooks/minion_basecalling_stats.ipynb"
 
 
-rule fastq_fastqc:
-    input:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
-    output:
-        html="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}.html",
-        zip="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
-    params:
-        "--quiet"
-    threads:
-        2
-    wrapper:
-        "v3.1.0/bio/fastqc"
+# rule fastq_fastqc:
+#     input:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/{sample}.fastq.gz"
+#     output:
+#         html="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}.html",
+#         zip="{results}/{guppy}/{run}/{cfg_type}/fastq/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
+#     params:
+#         "--quiet"
+#     threads:
+#         2
+#     wrapper:
+#         "v3.1.0/bio/fastqc"
 
 
-rule multiqc:
-    input:
-        expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/qc/fastqc/{sample}{ext}",
-            sample=samples,
-            ext=[".html", "_fastqc.zip"]
-        )
-    output:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html"
-    params:
-        ""  # Optional: extra parameters for multiqc.
-    log:
-        "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
-    wrapper:
-        "v3.1.0/bio/multiqc"
+# rule multiqc:
+#     input:
+#         expand("{{results}}/{{guppy}}/{{run}}/{{cfg_type}}/fastq/qc/fastqc/{sample}{ext}",
+#             sample=samples,
+#             ext=[".html", "_fastqc.zip"]
+#         )
+#     output:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.html"
+#     params:
+#         ""  # Optional: extra parameters for multiqc.
+#     log:
+#         "{results}/{guppy}/{run}/{cfg_type}/fastq/qc/multiqc/{run}.multiqc.log"
+#     wrapper:
+#         "v3.1.0/bio/multiqc"
 
