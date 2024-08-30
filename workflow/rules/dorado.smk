@@ -27,9 +27,25 @@ rule pod5:
         ">{output.summary} "
 
 
+rule dorado_download_models:
+    output:
+        directory("resources/dorado_models/{dorado}")
+    params:
+        bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
+    log:
+        "resources/dorado_models/{dorado}/{dorado}.dorado_download_models.log"
+    shell:
+        "{params.bin} download "
+        "--overwrite "
+        "--model all "
+        "--directory {output} "
+        ">{log} 2>&1 "
+
+
 rule dorado_basecaller:
     input:
-        rules.pod5.output.pod5
+        rules.dorado_download_models.output,
+        pod5=rules.pod5.output.pod5
     output:
         bam="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.bam",
         tsv="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.summary.tsv.gz"
@@ -37,6 +53,7 @@ rule dorado_basecaller:
         bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
         extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
         barcode_kit=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["barcode_kit"],
+        model_path=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["model"][wildcards.model]
         ## sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
         ## outdir="{results}/{run}/{dorado}/{model}/dorado",
     log:
@@ -49,11 +66,11 @@ rule dorado_basecaller:
         8
     shell:
         "{params.bin} basecaller "
-        "{wildcards.model} "
+        "{params.model_path} "
         "{params.extra} "
         "--kit-name {params.barcode_kit} "
         ##"--sample-sheet {params.sample_sheet} "
-        "{input} "
+        "{input.pod5} "
         ">{output.bam} "
         "2>{log}; "
         "{params.bin} summary "
@@ -154,11 +171,15 @@ rule dorado_fastq_fastqc:
         html="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}.html",
         zip="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
     params:
-        "--quiet"
-    threads:
-        2
+        extra = "--quiet"
+    log:
+        "{results}/{run}/{dorado}/{model}/log/{sample}.fastqc.log"
+    threads: 1
+    resources:
+        mem_mb = 8192
     wrapper:
-        "v3.1.0/bio/fastqc"
+        "v4.3.0/bio/fastqc"
+
 
 
 rule dorado_pycoQC:
@@ -225,5 +246,5 @@ rule dorado_multiqc:
     log:
         "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.log"
     wrapper:
-        "v3.1.0/bio/multiqc"
+        "v4.3.0/bio/multiqc"
 

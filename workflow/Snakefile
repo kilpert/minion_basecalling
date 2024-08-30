@@ -173,10 +173,16 @@ def run_dorado():
     for dorado in config["dorado_basecaller"].keys():
 
         file_list.append(
+            expand("resources/dorado_models/{dorado}",
+                dorado=dorado,
+            )
+        )
+
+        file_list.append(
             expand("{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.{ext}",
                 results=results,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
                 run=run,
                 ext=["bam", "summary.tsv.gz"]
             )
@@ -186,7 +192,7 @@ def run_dorado():
             expand("{results}/{run}/{dorado}/{model}/demux",
                 results=results,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
                 run=run,
             )
         )
@@ -196,7 +202,7 @@ def run_dorado():
                 results=results,
                 run=run,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
                 sample=samples,
             )
         )
@@ -206,7 +212,7 @@ def run_dorado():
                 results=results,
                 run=run,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
             )
         )
 
@@ -215,7 +221,7 @@ def run_dorado():
                 results=results,
                 run=run,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
                 sample=samples,
                 ext=[".html", "_fastqc.zip"]
             )
@@ -226,7 +232,7 @@ def run_dorado():
                 results=results,
                 run=run,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
             )
         )
 
@@ -235,7 +241,7 @@ def run_dorado():
                 results=results,
                 run=run,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
                 ext=["html", "json"]
             )
         )
@@ -245,7 +251,7 @@ def run_dorado():
                 results=results,
                 run=run,
                 dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"],
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
             )
         )
 
