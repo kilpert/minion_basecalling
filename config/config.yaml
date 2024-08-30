@@ -2,40 +2,40 @@
 
 
 ## Optional: Only process n fast5 files
-# test: "| head -1"
+test: "| head -1"
 
 
-## Guppy
-guppy_cfg:
-  - dna_r9.4.1_450bps_fast.cfg
-  # - dna_r9.4.1_450bps_hac.cfg
-  # - dna_r9.4.1_450bps_sup.cfg
+# ## Guppy
+# guppy_cfg:
+#   - dna_r9.4.1_450bps_fast.cfg
+#   # - dna_r9.4.1_450bps_hac.cfg
+#   # - dna_r9.4.1_450bps_sup.cfg
 
 
-guppy_basecaller:
-  # ont-guppy_6.4.6:
-  #   bin: opt/ont-guppy/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
-  #   parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
-  ont-guppy_6.5.7:
-    bin: opt/ont-guppy/ont-guppy_6.5.7_linux64/bin/guppy_basecaller
-    parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
+# guppy_basecaller:
+#   # ont-guppy_6.4.6:
+#   #   bin: opt/ont-guppy/ont-guppy_6.4.6/bin/guppy_basecaller # guppy binary
+#   #   parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
+#   ont-guppy_6.5.7:
+#     bin: opt/ont-guppy/ont-guppy_6.5.7_linux64/bin/guppy_basecaller
+#     parameter: --disable_pings --recursive --compress_fastq --do_read_splitting --calib_detect --records_per_fastq 0 --enable_trim_barcodes
 
 
 dorado_basecaller:
 
-  dorado_0.6.2:
-    bin: opt/dorado/dorado-0.6.2-linux-x64/bin/dorado
-    ## extra: --no-trim
-    barcode_kit: EXP-NBD196
-    sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
-    model:
-      ## label: name or path
-      # fast: fast # automatic download
-      # hac: hac # automatic download
-      # sup: sup # automatic download
-      FAST: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_fast@v3.4
-      HAC: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_hac@v3.3
-      SUP: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_sup@v3.6
+  # dorado_0.6.2:
+  #   bin: opt/dorado/dorado-0.6.2-linux-x64/bin/dorado
+  #   ## extra: --no-trim
+  #   barcode_kit: EXP-NBD196
+  #   sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
+  #   model:
+  #     ## label: name or path
+  #     # fast: fast # automatic download
+  #     # hac: hac # automatic download
+  #     # sup: sup # automatic download
+  #     FAST: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_fast@v3.4
+  #     HAC: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_hac@v3.3
+  #     SUP: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_sup@v3.6
 
   dorado_0.7.3:
     bin: opt/dorado/dorado-0.7.3-linux-x64/bin/dorado
