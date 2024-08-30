@@ -2,7 +2,7 @@
 
 
 ## Optional: Only process n fast5 files
-test: "| head -1"
+# test: "| head -1"
 
 
 ## Guppy
