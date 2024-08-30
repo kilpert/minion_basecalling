@@ -8,3 +8,4 @@ opt
 .temp*/
 .fuse*
 resources/dorado_models/
+**/*_old/
