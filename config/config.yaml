@@ -27,7 +27,6 @@ dorado_basecaller:
   #   bin: opt/dorado/dorado-0.6.2-linux-x64/bin/dorado
   #   ## extra: --no-trim
   #   barcode_kit: EXP-NBD196
-  #   sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
   #   model:
   #     ## label: name or path
   #     # fast: fast # automatic download
@@ -40,16 +39,14 @@ dorado_basecaller:
   dorado_0.7.3:
     bin: opt/dorado/dorado-0.7.3-linux-x64/bin/dorado
     ## extra: --no-trim
-    barcode_kit: EXP-NBD196
-    sample_sheet: sample_sheets/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF.sample_sheet.csv
     model:
       ## label: name or path
       # fast: fast # automatic download
       # hac: hac # automatic download
       # sup: sup # automatic download
       FAST: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_fast@v3.4
-      HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
-      SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
+      # HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
+      # SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
