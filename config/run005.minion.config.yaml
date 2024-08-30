@@ -1,0 +1,17 @@
+## run005_20230321_FAME3_NAA10_Ilaria
+run:
+  experiment_id: run005_20230321_FAME3_NAA10_Ilaria
+  input_dir: /vol/minion/minknow_backup/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84
+  sample_sheet: sample_sheets/Run005_20230321_FAME3_NAA10_Ilaria.sample_sheet.csv
+  barcode_kits:
+    - EXP-NBD196
+  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  ## flowcell: FLO-MIN106 # starts with "FLO"
+  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+
+  
+outdir: results.2024-8
+
+
+gpu_requests: 1
+

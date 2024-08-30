@@ -5,6 +5,9 @@
 
 ## results.2024-8
 snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/run001.minion.config.yaml
+snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/run004.minion.config.yaml
+snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/run005.minion.config.yaml
+snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/run006.minion.config.yaml
 
 snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/run014.minion.config.yaml
 
