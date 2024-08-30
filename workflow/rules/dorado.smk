@@ -52,7 +52,7 @@ rule dorado_basecaller:
     params:
         bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
         extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
-        barcode_kit=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["barcode_kit"],
+        barcode_kits=lambda wildcards: " ".join(config["run"]["barcode_kits"]),
         model_path=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["model"][wildcards.model]
         ## sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
         ## outdir="{results}/{run}/{dorado}/{model}/dorado",
@@ -68,7 +68,7 @@ rule dorado_basecaller:
         "{params.bin} basecaller "
         "{params.model_path} "
         "{params.extra} "
-        "--kit-name {params.barcode_kit} "
+        "--kit-name {params.barcode_kits} "
         ##"--sample-sheet {params.sample_sheet} "
         "{input.pod5} "
         ">{output.bam} "
@@ -80,7 +80,7 @@ rule dorado_basecaller:
         ">{output.tsv} "
 
 
-rule dorado_demux_and_trim:
+checkpoint dorado_demux_and_trim:
     input:
         rules.dorado_basecaller.output.bam
     output:
@@ -88,13 +88,16 @@ rule dorado_demux_and_trim:
     params:
         bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
         extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
-        outdir="{results}/{run}/{dorado}/{model}/demux/",
-        barcode_kit=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["barcode_kit"],
-        sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
+        outdir="{results}/{run}/{dorado}/{model}/demux",
+        barcode_kits=lambda wildcards: config["run"]["barcode_kits"],
+        sample_sheet=lambda wildcards: config["run"]["sample_sheet"],
+        samples=samples,
     log:
         "{results}/{run}/{dorado}/{model}/log/{run}.{model}.demux.log"
     benchmark:
         "{results}/{run}/.benchmark/demux.{dorado}.{run}.{model}.benchmark.tsv"
+    conda:
+        "../envs/samtools.yaml"
     resources:
         gpu_requests=1
     threads:
@@ -105,11 +108,15 @@ rule dorado_demux_and_trim:
         ## "--no-trim "
         ## "--emit-fastq "
         "--emit-summary "
-        "--kit-name {params.barcode_kit} "
+        "--kit-name {params.barcode_kits} "
         "--sample-sheet {params.sample_sheet} "
         "--output-dir {params.outdir} "
         "{input} "
-        "2>{log} "
+        "2>{log}; "
+        ## if no bam file for sample, create empty bam file (only including a header):
+        "for sample in {samples}; do "
+        "[ -f {params.outdir}/${{sample}}.bam ] || samtools view -H {params.outdir}/unclassified.bam -b -o {params.outdir}/${{sample}}.bam; "
+        "done "
 
 
 # rule dorado_trim:
@@ -174,7 +181,7 @@ rule dorado_fastq_fastqc:
         extra = "--quiet"
     log:
         "{results}/{run}/{dorado}/{model}/log/{sample}.fastqc.log"
-    threads: 1
+    threads: 2
     resources:
         mem_mb = 8192
     wrapper:
