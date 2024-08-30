@@ -181,7 +181,7 @@ rule dorado_fastq_fastqc:
         extra = "--quiet"
     log:
         "{results}/{run}/{dorado}/{model}/log/{sample}.fastqc.log"
-    threads: 2
+    threads: 1
     resources:
         mem_mb = 8192
     wrapper:
