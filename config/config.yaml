@@ -2,7 +2,7 @@
 
 
 ## Optional: Only process n fast5 files
-test: "| head -1"
+# test: "| head -1"
 
 
 # ## Guppy
@@ -46,7 +46,7 @@ dorado_basecaller:
       # sup: sup # automatic download
       FAST: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_fast@v3.4
       # HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
-      # SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
+      SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
