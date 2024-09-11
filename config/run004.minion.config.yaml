@@ -2,7 +2,7 @@
 
 run:
   experiment_id: run004
-  input_dir: /vol/minion/minknow_backup/data/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041
+  input_dir: /vol/minion/minknow_backup/data/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041 # minion.local
   sample_sheet: sample_sheets/run004.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196

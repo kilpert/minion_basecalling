@@ -2,7 +2,7 @@
 
 run:
   experiment_id: run005
-  input_dir: /vol/minion/minknow_backup/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84
+  input_dir: /vol/minion/minknow_backup/data/Run005_20230321_FAME3_NAA10_Ilaria/no_sample/20230321_1056_MN37911_FAW44825_2fd0ef84 # minion.local
   sample_sheet: sample_sheets/run005.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
