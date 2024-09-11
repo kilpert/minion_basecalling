@@ -1,11 +1,15 @@
-## FAME3 run010
+## run010_20230920_FGF14_FAME_NAA10
+
 run:
-  experiment_id: run010_20230920_FGF14_FAME_NAA10
+  experiment_id: run010
   input_dir: /vol/minion/minknow_backup/data/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042  # minion.local
   sample_sheet: sample_sheets/run010.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
-
+  ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
+  ## flowcell: FLO-MIN106 # starts with "FLO"
+  ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
+  
 
 outdir: results.FAME3-2
 

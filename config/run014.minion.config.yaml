@@ -1,6 +1,7 @@
 ## run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
+
 run:
-  experiment_id: run014_20240515_FGF14_MARCH6_NAA_DAB_AFF
+  experiment_id: run014
   input_dir: /vol/minion/minknow_backup/data/run014_20240515_FGF14_MARCH6_NAA_DAB_AFF/no_sample/20240515_1440_MN37911_FAX76094_a2d8cb34 # minion.local
   sample_sheet: sample_sheets/run014.sample_sheet.csv
   barcode_kits:
