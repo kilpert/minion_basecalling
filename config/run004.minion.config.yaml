@@ -2,15 +2,15 @@
 run:
   experiment_id: run004_20221019_FAME3_DAB1_FGF14_SCA8
   input_dir: /vol/minion/minknow_backup/data/004_20221019_FAME3_DAB1_FGF14_SCA8/no_sample/20221019_1314_MN37911_FAR58791_d2fc7041
-  sample_sheet: sample_sheets/004_20221019_FAME3_DAB1_FGF14_SCA8.sample_sheet.csv
+  sample_sheet: sample_sheets/run004.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
   ## flowcell: FLO-MIN106 # starts with "FLO"
   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
-  
-outdir: results.2024-8
+
+outdir: results.FAME3-2
 
 
 gpu_requests: 1

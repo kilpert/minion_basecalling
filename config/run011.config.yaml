@@ -1,8 +1,0 @@
-# ## FAME3 run011
-# run:
-#   experiment_id: run011_20230921_FGF14_FAME_NAA10
-#   ## input_dir: /projects/humgen-seq/MinION_Mk1B.MN37911/device_output/run011_20230921_FGF14_FAME_NAA10/no_sample/20230921_0913_MN37911_FAW86931_874371bb # humgen-seq
-#   input_dir: /local/work/fkilpert/run011_20230921_FGF14_FAME_NAA10/no_sample/20230921_0913_MN37911_FAW86931_874371bb # ikim g1-7
-#   sample_sheet: sample_sheets/run011_20230921_FGF14_FAME_NAA10.sample_sheet.csv
-#   barcode_kits:
-#     - EXP-NBD196

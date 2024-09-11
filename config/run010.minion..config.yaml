@@ -1,0 +1,14 @@
+## FAME3 run010
+run:
+  experiment_id: run010_20230920_FGF14_FAME_NAA10
+  input_dir: /vol/minion/minknow_backup/data/run010_20230920_FGF14_FAME_NAA10/no_sample/20230920_0954_MN37911_FAW86931_88663042  # minion.local
+  sample_sheet: sample_sheets/run010.sample_sheet.csv
+  barcode_kits:
+    - EXP-NBD196
+
+
+outdir: results.FAME3-2
+
+
+gpu_requests: 1
+
