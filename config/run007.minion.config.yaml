@@ -3,7 +3,7 @@
 run:
   experiment_id: run007
   input_dir: /vol/minion/minknow_backup/data/run007_20230614_FGF14_RFC1_FAME_OGT/no_sample/20230614_1026_MN37911_FAW85393_118bb0ea # minion.local
-  sample_sheet: sample_sheets/run006.sample_sheet.csv
+  sample_sheet: sample_sheets/run007.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
   ## Make your choice (guppy is configured with: flowcell+kit OR cfg). cfg will overrule flowcell+kit in this workflow!
