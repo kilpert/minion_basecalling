@@ -36,17 +36,29 @@ dorado_basecaller:
   #     HAC: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_hac@v3.3
   #     SUP: resources/dorado_models/dorado_0.6.2/dna_r9.4.1_e8_sup@v3.6
 
-  dorado_0.7.3:
-    bin: opt/dorado/dorado-0.7.3-linux-x64/bin/dorado
+  # dorado_0.7.3:
+  #   bin: opt/dorado/dorado-0.7.3-linux-x64/bin/dorado
+  #   ## extra: --no-trim
+  #   model:
+  #     ## label: name or path
+  #     # fast: fast # automatic download
+  #     # hac: hac # automatic download
+  #     # sup: sup # automatic download
+  #     FAST: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_fast@v3.4
+  #     # HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
+  #     # SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
+
+  dorado_0.8.0:
+    bin: opt/dorado/dorado-0.8.0-linux-x64/bin/dorado
     ## extra: --no-trim
     model:
       ## label: name or path
       # fast: fast # automatic download
       # hac: hac # automatic download
       # sup: sup # automatic download
-      FAST: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_fast@v3.4
-      HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
-      SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
+      FAST: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_fast@v3.4
+      # HAC: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_hac@v3.3
+      # SUP: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_sup@v3.6
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
