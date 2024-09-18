@@ -57,8 +57,8 @@ dorado_basecaller:
       # hac: hac # automatic download
       # sup: sup # automatic download
       FAST: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_fast@v3.4
-      # HAC: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_hac@v3.3
-      # SUP: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_sup@v3.6
+      HAC: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_hac@v3.3
+      SUP: resources/dorado_models/dorado_0.8.0/dna_r9.4.1_e8_sup@v3.6
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
