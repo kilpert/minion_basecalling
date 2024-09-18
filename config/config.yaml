@@ -45,7 +45,7 @@ dorado_basecaller:
       # hac: hac # automatic download
       # sup: sup # automatic download
       FAST: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_fast@v3.4
-      # HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
+      HAC: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_hac@v3.3
       SUP: resources/dorado_models/dorado_0.7.3/dna_r9.4.1_e8_sup@v3.6
 
 
