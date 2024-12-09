@@ -9,3 +9,4 @@ opt
 .fuse*
 resources/dorado_models/
 **/*_old/
+input/
