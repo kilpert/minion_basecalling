@@ -262,6 +262,15 @@ def run_dorado():
 
 rule all:
     input:
+        ## dorado.smk
+        ## pod5
+        expand("{results}/{run}/pod5/{run}.{ext}",
+            results=results,
+            guppy=guppy,
+            run=run,
+            ext=["pod5", "summary.tsv.gz"]
+        ),
+
         run_dorado(),
 
         # expand("{results}/{guppy}/guppy_basecaller.available_workflows.txt",
@@ -366,14 +375,7 @@ rule all:
         #     cfg_type=cfg_type,
         # ),
 
-        # ## dorado.smk
-        # ## pod5
-        # expand("{results}/{run}/pod5/{run}.{ext}",
-        #     results=results,
-        #     guppy=guppy,
-        #     run=run,
-        #     ext=["pod5", "summary.tsv.gz"]
-        # ),
+
 
 
 
