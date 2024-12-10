@@ -3,7 +3,6 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  # - pip
-  # - pip:
-  #   - pod5 ==0.3.23
-  - lib-pod5 ==0.3.15
+  - pip
+  - pip:
+    - pod5 ==0.3.23
