@@ -194,7 +194,7 @@ checkpoint dorado_demux_and_trim:
     shell:
         "{params.bin} demux "
         "--threads {threads} "
-        ## "--no-trim "
+        ## "--no-trim " # Skip barcode trimming. If this option is not chosen, trimming is enabled.
         ## "--emit-fastq "
         "--emit-summary "
         "--kit-name {params.barcode_kits} "
@@ -202,6 +202,11 @@ checkpoint dorado_demux_and_trim:
         "--output-dir {params.outdir} "
         "{input} "
         "2>{log}; "
+        "for bam in {params.outdir}/*.bam; do "
+        "dname=$(dirname $bam); "
+        "bname=$(basename $bam | sed 's/^[0-9a-z]*_//'); "
+        "mv $bam $dname/$bname; "
+        "done; "
         ## if no bam file for sample, create empty bam file (only including a header):
         "for sample in {samples}; do "
         "[ -f {params.outdir}/${{sample}}.bam ] || samtools view -H {params.outdir}/unclassified.bam -b -o {params.outdir}/${{sample}}.bam; "
