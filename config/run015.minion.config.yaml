@@ -2,7 +2,6 @@
 
 run:
   experiment_id: run015
-  ## input_dir: /vol/minion/minknow/data/run015_20241203_FGF14_RFC1_MARCHF6/no_sample_id/20241203_1022_MN37911_FAY01820_a33336ee # minion.local
   input_dir: /vol/minion/minion_basecalling/input/42h/run015_20241203_FGF14_RFC1_MARCHF6/no_sample_id/20241203_1022_MN37911_FAY01820_a33336ee          # use the first 42h of sequencing only!
   sample_sheet: sample_sheets/run015.sample_sheet.csv
   barcode_kits:
@@ -12,7 +11,8 @@ run:
   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
 
-outdir: results.FAME3-2
+outdir: results/2024-12-18
+
 
 gpu_requests: 1
 
