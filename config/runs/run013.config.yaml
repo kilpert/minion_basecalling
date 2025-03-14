@@ -2,7 +2,7 @@
 
 run:
   experiment_id: run013
-  input_dir: /home/kilpert/sshfs/minion/minknow_backup/data/run013_20240515_MARCHF6/no_sample/20240515_0944_MN37911_FAY01820_b8e1ac8d # minion.local
+  input_dir: /vol/minion/minknow_backup/data/run013_20240515_MARCHF6/no_sample/20240515_0944_MN37911_FAY01820_b8e1ac8d # minion.local
   sample_sheet: sample_sheets/run013.sample_sheet.csv
   barcode_kits:
     - EXP-NBD196
