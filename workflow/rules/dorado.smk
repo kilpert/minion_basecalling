@@ -1,30 +1,30 @@
-rule pod5:
-    input:
-        config["run"]["input_dir"]
-    output:
-        pod5="{results}/{run}/pod5/{run}.pod5",
-        summary="{results}/{run}/pod5/{run}.summary.tsv.gz"
-    params:
-        test=config["test"] if config["test"] else "",
-    log:
-        "{results}/{run}/pod5/{run}.pod5.log"
-    benchmark:
-        "{results}/{run}/.benchmark/pod5.{run}.benchmark.tsv"
-    conda:
-        "../envs/pod5.yaml"
-    threads:
-        8
-    shell:
-        "pod5 convert fast5 "
-        "--strict "
-        "--threads {threads} "
-        "$(find {input} -name '*.fast5' | sort {params.test}) "
-        "--output {output.pod5} "
-        ">{log} 2>&1; "
-        "pod5 view "
-        "{output.pod5} "
-        "| pigz --best -p {threads} "
-        ">{output.summary} "
+# rule pod5_convert_from_fast5:
+#     input:
+#         config["run"]["input_dir"]
+#     output:
+#         pod5="{results}/{run}/pod5/{run}.pod5",
+#         summary="{results}/{run}/pod5/{run}.summary.tsv.gz"
+#     params:
+#         test=config["test"] if config["test"] else "",
+#     log:
+#         "{results}/{run}/pod5/{run}.pod5.log"
+#     benchmark:
+#         "{results}/{run}/.benchmark/pod5.{run}.benchmark.tsv"
+#     conda:
+#         "../envs/pod5.yaml"
+#     threads:
+#         8
+#     shell:
+#         "pod5 convert fast5 "
+#         "--strict "
+#         "--threads {threads} "
+#         "$(find {input} -name '*.fast5' | sort {params.test}) "
+#         "--output {output.pod5} "
+#         ">{log} 2>&1; "
+#         "pod5 view "
+#         "{output.pod5} "
+#         "| pigz --best -p {threads} "
+#         ">{output.summary} "
 
 
 rule dorado_download_models:
@@ -105,7 +105,7 @@ rule dorado_download_models:
 rule dorado_basecaller:
     input:
         rules.dorado_download_models.output,
-        pod5=rules.pod5.output.pod5
+        pod5_input_dir=config["run"]["input_dir"]
     output:
         bam="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.bam",
         tsv="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.summary.tsv.gz"
@@ -129,8 +129,8 @@ rule dorado_basecaller:
         "{params.model_path} "
         "{params.extra} "
         "--kit-name {params.barcode_kits} "
-        ##"--sample-sheet {params.sample_sheet} "
-        "{input.pod5} "
+        ## "--sample-sheet {params.sample_sheet} "
+        "{input.pod5_input_dir} "
         ">{output.bam} "
         "2>{log}; "
         "{params.bin} summary "
@@ -204,7 +204,7 @@ checkpoint dorado_demux_and_trim:
         "2>{log}; "
         "for bam in {params.outdir}/*.bam; do "
         "dname=$(dirname $bam); "
-        "bname=$(basename $bam | sed 's/^[0-9a-z]*_//'); "
+        "bname=$(basename $bam | sed 's/^[0-9a-z-]*_//'); "
         "mv $bam $dname/$bname; "
         "done; "
         ## if no bam file for sample, create empty bam file (only including a header):
