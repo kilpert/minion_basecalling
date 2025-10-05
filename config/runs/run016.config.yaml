@@ -11,7 +11,7 @@ run:
   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
 
-outdir: results/2025-10-02
+outdir: results.no-trim/2025-10-02
 
 
 gpu_requests: 1

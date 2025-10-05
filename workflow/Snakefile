@@ -101,7 +101,7 @@ for dorado in config["dorado_basecaller"].keys():
     try:
         config["dorado_basecaller"][dorado]["extra"]
     except:
-        config["dorado_basecaller"][dorado]["extra"] = "--no-trim"
+        config["dorado_basecaller"][dorado]["extra"] = "--recursive"
 
 
 try:
