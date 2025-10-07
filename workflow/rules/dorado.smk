@@ -111,6 +111,7 @@ rule dorado_basecaller:
         tsv="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.summary.tsv.gz"
     params:
         bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
+        basecaller=config["dorado_basecaller"][dorado]["basecaller"],
         extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
         barcode_kits=lambda wildcards: " ".join(config["run"]["barcode_kits"]),
         model_path=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["model"][wildcards.model]
@@ -125,10 +126,11 @@ rule dorado_basecaller:
     threads:
         8
     shell:
-        "{params.bin} basecaller "
+        "{params.bin} "
+        "{params.basecaller} "
         "{params.model_path} "
         "{params.extra} "
-        "--kit-name {params.barcode_kits} "
+        ## "--kit-name {params.barcode_kits} " # simplex only
         ## "--sample-sheet {params.sample_sheet} "
         "{input.pod5_input_dir} "
         ">{output.bam} "
