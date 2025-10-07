@@ -103,6 +103,12 @@ for dorado in config["dorado_basecaller"].keys():
     except:
         config["dorado_basecaller"][dorado]["extra"] = "--recursive"
 
+for dorado in config["dorado_basecaller"].keys():
+    try:
+        config["dorado_basecaller"][dorado]["basecaller"]
+    except:
+        config["dorado_basecaller"][dorado]["basecaller"] = "basecaller" # default basecaller (=simplex)
+
 
 try:
     config["test"]
