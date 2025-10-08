@@ -27,6 +27,13 @@
 ## DAB1
 # snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/runs/run014.config.yaml
 
+
+if [[ "$(hostname)" == "g1-9" ]]; then
+  PROFILE="--profile humgen"
+else
+  PROFILE=""
+fi
+
 ## 2025
-snakemake --profile humgen --cores all --use-conda -p --rerun-incomplete --configfile config/runs/run016.config.yaml # run16_20251001_MARCHF6_FGF14_RNU2s on g1-9
+snakemake $PROFILE --cores all --use-conda -p --rerun-incomplete --configfile config/runs/run016.config.yaml # run16_20251001_MARCHF6_FGF14_RNU2s on g1-9
 
