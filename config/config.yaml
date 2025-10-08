@@ -73,6 +73,7 @@ dorado_basecaller:
 
   dorado_1.1.1_duplex:
     bin: opt/dorado/dorado-1.1.1-linux-x64/bin/dorado
+    env: CUDA_VISIBLE_DEVICES=0 # limit to GPU 0 on g1-9
     extra: --recursive # --no-trim
     basecaller: duplex
     model:
