@@ -28,5 +28,5 @@
 # snakemake --cores --use-conda --conda-frontend mamba -p --rerun-incomplete --configfile config/runs/run014.config.yaml
 
 ## 2025
-snakemake --cores all --use-conda -p --rerun-incomplete --configfile config/runs/run016.config.yaml # run16_20251001_MARCHF6_FGF14_RNU2s
+snakemake --profile humgen --cores all --use-conda -p --rerun-incomplete --configfile config/runs/run016.config.yaml # run16_20251001_MARCHF6_FGF14_RNU2s on g1-9
 
