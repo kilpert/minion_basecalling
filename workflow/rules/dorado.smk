@@ -110,9 +110,10 @@ rule dorado_basecaller:
         bam="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.bam",
         tsv="{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.summary.tsv.gz"
     params:
-        bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
-        basecaller=config["dorado_basecaller"][dorado]["basecaller"],
-        extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
+        env=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("env", ""),
+        bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("bin", "dorado"),
+        basecaller=config["dorado_basecaller"][dorado].get("basecaller", "basecaller"),
+        extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("extra", "--recursive"),
         barcode_kits=lambda wildcards: " ".join(config["run"]["barcode_kits"]),
         model_path=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["model"][wildcards.model]
         ## sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
@@ -126,6 +127,7 @@ rule dorado_basecaller:
     threads:
         8
     shell:
+        "{params.env} "
         "{params.bin} "
         "{params.basecaller} "
         "{params.model_path} "
