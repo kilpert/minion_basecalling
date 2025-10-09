@@ -33,7 +33,7 @@ if [[ "$(hostname)" == g1-9* ]]; then
 else
   PROFILE=""
 fi
-echo "Using: ${PROFILE:-none}"
+echo "Snakemake: ${PROFILE:-none}"
 
 ## 2025
 snakemake $PROFILE --cores all --use-conda -p --rerun-incomplete --configfile config/runs/run016.config.yaml # run16_20251001_MARCHF6_FGF14_RNU2s on g1-9
