@@ -112,14 +112,15 @@ rule dorado_basecaller:
     params:
         env=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("env", ""),
         bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("bin", "dorado"),
-        basecaller=config["dorado_basecaller"][dorado].get("basecaller", "basecaller"),
+        basecaller=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("basecaller", "basecaller"),
         extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("extra", "--recursive"),
         barcode_kits=lambda wildcards: " ".join(config["run"]["barcode_kits"]),
-        model_path=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["model"][wildcards.model]
+        model_path=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["model"].get(wildcards.model, "hac"),
+        models_directory=lambda wildcards: f"export DORADO_MODELS_DIRECTORY={config['dorado_basecaller'][wildcards.dorado]['models_directory']};" if config["dorado_basecaller"][wildcards.dorado].get("models_directory", None) else "",
         ## sample_sheet=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["sample_sheet"],
         ## outdir="{results}/{run}/{dorado}/{model}/dorado",
     log:
-        "{results}/{run}/{dorado}/{model}/log/{run}.{model}.dorado.log"
+        "{results}/{run}/{dorado}/{model}/dorado/{run}.{model}.dorado.log"
     benchmark:
         "{results}/{run}/.benchmark/dorado.{dorado}.{run}.{model}.benchmark.tsv"
     resources:
@@ -127,9 +128,12 @@ rule dorado_basecaller:
     threads:
         8
     shell:
+        ##"[ -d {params.models_directory} ] || mkdir -p {params.models_directory}; "
+        "{params.models_directory} "
         "{params.env} "
         "{params.bin} "
         "{params.basecaller} "
+        ## "{wildcards.model} "
         "{params.model_path} "
         "{params.extra} "
         ## "--kit-name {params.barcode_kits} " # simplex only
@@ -173,26 +177,24 @@ rule dorado_basecaller:
 #   --barcode-sequences    Path to file with custom barcode sequences. 
 
 
-checkpoint dorado_demux_and_trim:
+checkpoint dorado_demux:
     input:
         rules.dorado_basecaller.output.bam
     output:
         directory("{results}/{run}/{dorado}/{model}/demux")
     params:
         bin=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["bin"],
-        extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado]["extra"],
+        extra=lambda wildcards: config["dorado_basecaller"][wildcards.dorado].get("demux_extra", "--emit-summary"),
         outdir="{results}/{run}/{dorado}/{model}/demux",
         barcode_kits=lambda wildcards: config["run"]["barcode_kits"],
         sample_sheet=lambda wildcards: config["run"]["sample_sheet"],
         samples=samples,
     log:
-        "{results}/{run}/{dorado}/{model}/log/{run}.{model}.demux.log"
+        "{results}/{run}/{dorado}/{model}/demux/{run}.{model}.demux.log"
     benchmark:
         "{results}/{run}/.benchmark/demux.{dorado}.{run}.{model}.benchmark.tsv"
     conda:
         "../envs/samtools.yaml"
-    resources:
-        gpu_requests=1
     threads:
         8
     shell:
@@ -200,16 +202,17 @@ checkpoint dorado_demux_and_trim:
         "--threads {threads} "
         ## "--no-trim " # Skip barcode trimming. If this option is not chosen, trimming is enabled.
         ## "--emit-fastq "
-        "--emit-summary "
+        ## "--emit-summary "
+        "{params.extra} "
         "--kit-name {params.barcode_kits} "
         "--sample-sheet {params.sample_sheet} "
         "--output-dir {params.outdir} "
         "{input} "
         "2>{log}; "
+        ## rename bam files to remove the barcode prefix added by dorado:
         "for bam in {params.outdir}/*.bam; do "
-        "dname=$(dirname $bam); "
         "bname=$(basename $bam | sed 's/^[0-9a-z-]*_//'); "
-        "mv $bam $dname/$bname; "
+        "mv $bam {params.outdir}/$bname; "
         "done; "
         ## if no bam file for sample, create empty bam file (only including a header):
         "for sample in {samples}; do "
@@ -235,7 +238,7 @@ checkpoint dorado_demux_and_trim:
 
 rule dorado_fastq:
     input:
-        rules.dorado_demux_and_trim.output
+        rules.dorado_demux.output
     output:
         "{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz"
     log:
