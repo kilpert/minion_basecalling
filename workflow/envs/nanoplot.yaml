@@ -3,5 +3,5 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - nanoplot =1.41.6
-  - pigz =2.6
+  - nanoplot =1.46.1
+  - pigz =2.8
