@@ -4,7 +4,8 @@ run:
   experiment_id: run016
   ## input_dir: /vol/minion/minknow_backup/data/run16_20251001_MARCHF6_FGF14_RNU2s/no_sample_id/20251001_1008_MN37911_FAZ40399_8ee791b2 # minion.local hdd
   ## input_dir: /vol/minion/minknow/data/run16_20251001_MARCHF6_FGF14_RNU2s/no_sample_id/20251001_1008_MN37911_FAZ40399_8ee791b2 # minion.local ssd
-  input_dir: /local/work/fkilpert/minion_basecalling/runs/run16_20251001_MARCHF6_FGF14_RNU2s/no_sample_id/20251001_1008_MN37911_FAZ40399_8ee791b2 # g1-9 ssd
+  ## input_dir: /local/work/fkilpert/minion_basecalling/runs/run16_20251001_MARCHF6_FGF14_RNU2s/no_sample_id/20251001_1008_MN37911_FAZ40399_8ee791b2 # g1-9 ssd
+  input_dir: runs/run16_debug
   sample_sheet: sample_sheets/run016.sample_sheet.csv
   barcode_kits:
     - SQK-NBD114-96
@@ -13,8 +14,10 @@ run:
   ## library_prep_kit: SQK-LSK109 # starts with "SQK" or "VSK"
 
 
-outdir: results/2025-10-07
+## outdir: results/2025-10-07_debug
+## outdir: results/2025-10-09_debug
+outdir: results/2025-10-10_debug
 
 
-gpu_requests: 1
+gpu_requests: 5
 
