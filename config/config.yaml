@@ -71,19 +71,19 @@ dorado_basecaller:
   #     ## HAC: resources/dorado_models/dorado_0.8.3/dna_r9.4.1_e8_hac@v3.3
   #     SUP: resources/dorado_models/dorado_0.8.3/dna_r9.4.1_e8_sup@v3.6
 
-  dorado_1.1.1_simplex:
-    env: sleep $((RANDOM % 20 + 1)); GPU=$(workflow/scripts/which_gpu); echo "GPU:" $GPU; export CUDA_VISIBLE_DEVICES="$GPU"; # choose least used GPU on g1-9
-    bin: opt/dorado/dorado-1.1.1-linux-x64/bin/dorado  
-    extra: --recursive --no-trim
-    basecaller: basecaller # =simplex
-    models_directory: resources/dorado_models/auto
-    model:
-      ## label: name or path
-      ## fast: resources/dorado_models/auto/dna_r10.4.1_e8.2_400bps_fast@v5.2.0
-      fast: fast # automatic download
-      hac: hac # Latest compatible hac simplex basecalling model
-      sup: sup # automatic download
-    demux_extra: --emit-summary --no-trim
+  # dorado_1.1.1_simplex:
+  #   env: sleep $((RANDOM % 20 + 1)); GPU=$(workflow/scripts/which_gpu); echo "GPU:" $GPU; export CUDA_VISIBLE_DEVICES="$GPU"; # choose least used GPU on g1-9
+  #   bin: opt/dorado/dorado-1.1.1-linux-x64/bin/dorado  
+  #   extra: --recursive --no-trim
+  #   basecaller: basecaller # =simplex
+  #   models_directory: resources/dorado_models/auto
+  #   model:
+  #     ## label: name or path
+  #     ## fast: resources/dorado_models/auto/dna_r10.4.1_e8.2_400bps_fast@v5.2.0
+  #     fast: fast # automatic download
+  #     # hac: hac # Latest compatible hac simplex basecalling model
+  #     # sup: sup # automatic download
+  #   demux_extra: --emit-summary --no-trim
 
 
   dorado_1.1.1_duplex:
@@ -101,9 +101,15 @@ dorado_basecaller:
       # hac: resources/dorado_models/dorado_1.1.1_duplex/dna_r10.4.1_e8.2_400bps_hac@v5.2.0
       # sup: resources/dorado_models/dorado_1.1.1_duplex/dna_r10.4.1_e8.2_400bps_sup@v5.2.0
       hac: hac # Latest compatible hac simplex basecalling model
-      sup: sup
+      # sup: sup
     demux_extra: --emit-summary --no-trim
 
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
+
+samtools:
+  read_type:
+    duplex: "dx:i:1"
+    simplex: "dx:i:0"
+    donor_simplex: "dx:i:-1"
 

@@ -151,19 +151,17 @@ def get_barcode(df, alias):
 
 ## include #############################################################################################################
 
+print("{:#^60}".format(" Include "))
+
 include: "rules/dorado.smk"
-include: "rules/qc.smk"
+# include: "rules/qc.smk"
 
 
 ## variables ###########################################################################################################
 print("{:#^60}".format(" Variables "))
 print(f"results: {results}")
-# print(f"guppy: {guppy}")
-# print(f"cfg_type: {cfg_type}")
 print(f"run: {run}")
-samples.append("unclassified")
-print(f"samples:", samples, len(samples))
-
+samples.extend(["unclassified",])
 
 
 ## snakemake: all ######################################################################################################
@@ -196,15 +194,15 @@ def run_dorado():
 
         file_list.append(
             expand("{results}/{run}/{dorado}/{model}/demux",
-                results=results,
-                dorado=dorado,
-                model=config["dorado_basecaller"][dorado]["model"].keys(),
-                run=run,
-            )
+                    results=results,
+                    run=run,
+                    dorado=dorado,
+                    model=config["dorado_basecaller"][dorado]["model"].keys(),
+                )
         )
 
         # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz",
+        #     expand("{results}/{run}/{dorado}/{model}/demux/{sample}.bam",
         #         results=results,
         #         run=run,
         #         dorado=dorado,
@@ -212,6 +210,17 @@ def run_dorado():
         #         sample=samples,
         #     )
         # )
+
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/fastq/{read_type}/{sample}.{read_type}.fastq.gz",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+                read_type=list(config["samtools"]["read_type"].keys()), # "duplex", "simplex"
+                sample=samples,
+            )
+        )
 
         # file_list.append(
         #     expand("{results}/{run}/{dorado}/{model}/fastq/checksum.md5",
@@ -265,7 +274,6 @@ def run_dorado():
 
 
 
-
 rule all:
     input:
         ## dorado.smk
@@ -277,6 +285,7 @@ rule all:
         #     ext=["pod5", "summary.tsv.gz"]
         # ),
         run_dorado(),
+
 
         # expand("{results}/{guppy}/guppy_basecaller.available_workflows.txt",
         #     results=results,
