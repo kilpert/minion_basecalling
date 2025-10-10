@@ -211,7 +211,7 @@ checkpoint dorado_demux:
         "2>{log}; "
         ## rename bam files to remove the barcode prefix added by dorado:
         "for bam in {params.outdir}/*.bam; do "
-        "bname=$(basename $bam | sed 's/^[0-9a-z-]*_//'); "
+        "bname=$(basename $bam | sed 's/^[^_]*_//'); "
         "mv $bam {params.outdir}/$bname; "
         "done; "
         ## if no bam file for sample, create empty bam file (only including a header):
