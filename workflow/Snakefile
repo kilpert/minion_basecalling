@@ -161,7 +161,21 @@ include: "rules/dorado.smk"
 print("{:#^60}".format(" Variables "))
 print(f"results: {results}")
 print(f"run: {run}")
+
+dorado_list = list(config["dorado_basecaller"].keys())
+print(f"dorado:",dorado_list, len(dorado_list))
+
 samples.extend(["unclassified",])
+print(f"samples:", samples, len(samples))
+
+## constraints #####################################################################################
+
+wildcard_constraints:
+    results="|".join([results]),
+    run="|".join([run]),
+    dorado=f"[\w.-]+",
+    model=f"[\w]+",
+    samples="|".join(samples),
 
 
 ## snakemake: all ######################################################################################################
@@ -174,7 +188,7 @@ print("{:#^60}".format(" Workflow "))
 def run_dorado():
     file_list = []
 
-    for dorado in config["dorado_basecaller"].keys():
+    for dorado in dorado_list:
 
         file_list.append(
             expand("resources/dorado_models/{dorado}",
@@ -212,63 +226,73 @@ def run_dorado():
         # )
 
         file_list.append(
-            expand("{results}/{run}/{dorado}/{model}/fastq/{read_type}/{sample}.{read_type}.fastq.gz",
+            expand("{results}/{run}/{dorado}/{model}/fastq_by_signal/{signal}/{sample}.{signal}.fastq.gz",
                 results=results,
                 run=run,
                 dorado=dorado,
                 model=config["dorado_basecaller"][dorado]["model"].keys(),
-                read_type=list(config["samtools"]["read_type"].keys()), # "duplex", "simplex"
+                signal=list(config["samtools"]["signal"].keys()), # "duplex", "simplex"
                 sample=samples,
             )
         )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/fastq/checksum.md5",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"].keys(),
-        #     )
-        # )
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+                sample=samples,
+            )
+        )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}{ext}",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"].keys(),
-        #         sample=samples,
-        #         ext=[".html", "_fastqc.zip"]
-        #     )
-        # )
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/fastq/checksum.md5",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+            )
+        )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.html",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"].keys(),
-        #     )
-        # )
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}{ext}",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+                sample=samples,
+                ext=[".html", "_fastqc.zip"]
+            )
+        )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.{ext}",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"].keys(),
-        #         ext=["html", "json"]
-        #     )
-        # )
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.{ext}",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+                ext=["html", "json"]
+            )
+        )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/qc/NanoPlot/NanoPlot-report.html",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"].keys(),
-        #     )
-        # )
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/qc/NanoPlot/NanoPlot-report.html",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+            )
+        )
+
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.html",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+            )
+        )
 
     return file_list
 

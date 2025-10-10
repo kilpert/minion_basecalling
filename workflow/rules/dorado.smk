@@ -249,17 +249,17 @@ checkpoint dorado_demux:
 #         "2>{log} "
 
 
-rule dorado_fastq:
+rule dorado_fastq_by_signal:
     input:
         lambda wildcards: f"{checkpoints.dorado_demux.get(**wildcards).output[0]}/{wildcards.sample}.bam"
     output:
-        "{results}/{run}/{dorado}/{model}/fastq/{read_type}/{sample}.{read_type}.fastq.gz"
+        "{results}/{run}/{dorado}/{model}/fastq_by_signal/{signal}/{sample}.{signal}.fastq.gz"
     params:
-        read_type=lambda wildcards: config["samtools"]["read_type"][wildcards.read_type],
+        signal=lambda wildcards: config["samtools"]["signal"][wildcards.signal],
     log:
-        "{results}/{run}/{dorado}/{model}/log/{sample}.{read_type}.dorado_fastq.log"
+        "{results}/{run}/{dorado}/{model}/log/{sample}.{signal}.dorado_fastq_by_signal.log"
     # benchmark:
-    #     "{results}/{run}/.benchmark/dorado_fastq.{dorado}.{model}.{sample}.{read_type}.benchmark.tsv"
+    #     "{results}/{run}/.benchmark/dorado_fastq.{dorado}.{model}.{sample}.{signal}.benchmark.tsv"
     conda:
         "../envs/samtools.yaml"
     threads:
@@ -270,7 +270,7 @@ rule dorado_fastq:
         "{input}; "
         "samtools view "
         "{input} "
-        "| grep '{params.read_type}' " # e.g.'dx:i:1', 'dx:i:0', 'dx:i:-1'
+        "| grep '{params.signal}' " # e.g.'dx:i:1', 'dx:i:0', 'dx:i:-1'
         ") "
         "| samtools fastq "
         "-n -T qs,dx,BC,RG "
@@ -279,103 +279,117 @@ rule dorado_fastq:
         ">{output} "
         "|| touch {output} " # to create the output file in case of empty output
 
+
+rule dorado_fastq:
+    input:
+        lambda wildcards: expand("{{results}}/{{run}}/{{dorado}}/{{model}}/fastq_by_signal/{signal}/{sample}.{signal}.fastq.gz",
+            signal=["duplex", "simplex"], # "duplex", "simplex"
+            sample=wildcards.sample,
+        )
+    output:
+        "{results}/{run}/{dorado}/{model}/fastq/{sample}.fastq.gz"
+    threads:
+        4
+    shell:
+        "zcat {input} "
+        "| pigz --best -p {threads} "
+        "> {output} "
         
 
-# rule dorado_fastq_md5:
-#     input:
-#         expand("{{results}}/{{run}}/{{dorado}}/{{model}}/fastq/{sample}.fastq.gz",
-#             sample=samples,
-#         )
-#     output:
-#         "{results}/{run}/{dorado}/{model}/fastq/checksum.md5"
-#     params:
-#         indir="{results}/{run}/{dorado}/{model}/fastq/"
-#     shell:
-#         "bash workflow/scripts/md5_make "
-#         "{params.indir} "
+rule dorado_fastq_md5:
+    input:
+        expand("{{results}}/{{run}}/{{dorado}}/{{model}}/fastq/{sample}.fastq.gz",
+            sample=samples,
+        )
+    output:
+        "{results}/{run}/{dorado}/{model}/fastq/checksum.md5"
+    params:
+        indir="{results}/{run}/{dorado}/{model}/fastq/"
+    shell:
+        "bash workflow/scripts/md5_make "
+        "{params.indir} "
 
 
-# rule dorado_fastq_fastqc:
-#     input:
-#         rules.dorado_fastq.output
-#     output:
-#         html="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}.html",
-#         zip="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
-#     params:
-#         extra = "--quiet"
-#     log:
-#         "{results}/{run}/{dorado}/{model}/log/{sample}.fastqc.log"
-#     threads: 1
-#     resources:
-#         mem_mb = 8192
-#     wrapper:
-#         "v4.3.0/bio/fastqc"
+rule dorado_fastq_fastqc:
+    input:
+        rules.dorado_fastq.output
+    output:
+        html="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}.html",
+        zip="{results}/{run}/{dorado}/{model}/qc/fastqc/{sample}_fastqc.zip" # the suffix _fastqc.zip is necessary for multiqc to find the file. If not using multiqc, you are free to choose an arbitrary filename
+    params:
+        extra = "--quiet"
+    log:
+        "{results}/{run}/{dorado}/{model}/log/{sample}.fastqc.log"
+    threads: 1
+    resources:
+        mem_mb = 8192
+    wrapper:
+        "v4.3.0/bio/fastqc"
 
 
-
-# rule dorado_pycoQC:
-#     input:
-#         rules.dorado_basecaller.output.tsv
-#     output:
-#         html="{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.html",
-#         json="{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.json"
-#     params:
-#         extra=config["pycoqc"],
-#     log:
-#         "{results}/{run}/{dorado}/{model}/log/{run}.{model}.pycoQC.log"
-#     conda:
-#         "../envs/pycoqc.yaml"
-#     shell:
-#         "pycoQC "
-#         "{params.extra} "
-#         "--summary_file {input} "
-#         "--html_outfile {output.html} "
-#         "--json_outfile {output.json} "
-#         ">'{log}' 2>&1 "
-
-
-# rule dorado_nanoplot:
-#     input:
-#         rules.dorado_basecaller.output.tsv
-#     output:
-#         "{results}/{run}/{dorado}/{model}/qc/NanoPlot/NanoPlot-report.html",
-#     params:
-#         outdir="{results}/{run}/{dorado}/{model}/qc/NanoPlot/",
-#         extra=config["nanoplot"],
-#         ## prefix="{run}.{cfg_type}",
-#         ## title="{run}.{cfg_type}",
-#     log:
-#         ##"{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/{run}.{cfg_type}.NanoPlot.log"
-#         "{results}/{run}/{dorado}/{model}/log/{run}.{model}.NanoPlot.log"
-#     conda:
-#         "../envs/nanoplot.yaml"
-#     threads:
-#         8
-#     shell:
-#         "NanoPlot "
-#         "-t {threads} "
-#         "{params.extra} "
-#         "--summary '{input}' "
-#         "-o {params.outdir} "
-#         ## "--prefix {params.prefix} "
-#         ## "--title {params.title} "
-#         ">'{log}' 2>&1 "
-#         ##"&& touch {output} "
+rule dorado_pycoQC:
+    input:
+        rules.dorado_basecaller.output.tsv
+    output:
+        html="{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.html",
+        json="{results}/{run}/{dorado}/{model}/qc/pycoQC/{run}.{model}.pycoQC.json"
+    params:
+        extra=config["pycoqc"],
+    log:
+        "{results}/{run}/{dorado}/{model}/log/{run}.{model}.pycoQC.log"
+    conda:
+        "../envs/pycoqc.yaml"
+    shell:
+        "pycoQC "
+        "{params.extra} "
+        "--summary_file {input} "
+        "--html_outfile {output.html} "
+        "--json_outfile {output.json} "
+        ">'{log}' 2>&1 "
 
 
-# rule dorado_multiqc:
-#     input:
-#         expand("{{results}}/{{run}}/{{dorado}}/{{model}}/qc/fastqc/{sample}_fastqc.zip",
-#             sample=samples,
-#         ),
-#         rules.dorado_pycoQC.output,
-#         rules.dorado_nanoplot.output,
-#     output:
-#         "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.html"
-#     params:
-#         ""  # Optional: extra parameters for multiqc.
-#     log:
-#         "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.log"
-#     wrapper:
-#         "v4.3.0/bio/multiqc"
+rule dorado_nanoplot:
+    input:
+        rules.dorado_basecaller.output.tsv
+    output:
+        "{results}/{run}/{dorado}/{model}/qc/NanoPlot/NanoPlot-report.html",
+    params:
+        outdir="{results}/{run}/{dorado}/{model}/qc/NanoPlot/",
+        extra=config["nanoplot"],
+        ## prefix="{run}.{cfg_type}",
+        ## title="{run}.{cfg_type}",
+    log:
+        ##"{results}/{guppy}/{run}/{cfg_type}/run_qc/NanoPlot/{run}.{cfg_type}.NanoPlot.log"
+        "{results}/{run}/{dorado}/{model}/log/{run}.{model}.NanoPlot.log"
+    conda:
+        "../envs/nanoplot.yaml"
+    threads:
+        8
+    shell:
+        "NanoPlot "
+        "-t {threads} "
+        "{params.extra} "
+        "--summary '{input}' "
+        "-o {params.outdir} "
+        ## "--prefix {params.prefix} "
+        ## "--title {params.title} "
+        ">'{log}' 2>&1 "
+        ##"&& touch {output} "
+
+
+rule dorado_multiqc:
+    input:
+        expand("{{results}}/{{run}}/{{dorado}}/{{model}}/qc/fastqc/{sample}_fastqc.zip",
+            sample=samples,
+        ),
+        rules.dorado_pycoQC.output,
+        rules.dorado_nanoplot.output,
+    output:
+        "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.html"
+    params:
+        ""  # Optional: extra parameters for multiqc.
+    log:
+        "{results}/{run}/{dorado}/{model}/qc/{run}.multiqc.log"
+    wrapper:
+        "v4.3.0/bio/multiqc"
 
