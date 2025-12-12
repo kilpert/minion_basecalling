@@ -38,7 +38,7 @@ rule dorado_download_models:
         "resources/dorado_models/{dorado}/{dorado}.dorado_download_models.log"
     shell:
         "{params.bin} download "
-        "--overwrite "
+        ## "--overwrite "
         "--model all "
         "--directory {output} "
         ">{log} 2>&1 "
