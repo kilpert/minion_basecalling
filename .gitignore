@@ -11,3 +11,4 @@ resources/dorado_models/
 **/*_old/
 input/
 runs*/
+.tmp*
