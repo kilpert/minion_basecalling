@@ -16,9 +16,9 @@ run:
 
 ## outdir: results/2025-10-07_debug
 ## outdir: results/2025-10-09_debug
-## outdir: results/2025-10-10_debug
+# outdir: results/2025-10-10_debug
 outdir: results/2025-10-10
 
 
-gpu_requests: 3
+gpu_requests: 1
 
