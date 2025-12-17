@@ -267,7 +267,7 @@ rule demux_bam:
 
 rule dorado_fastq_by_signal:
     input:
-        lambda wildcards: f"{checkpoints.dorado_demux.get(**wildcards).output[0]}/{wildcards.sample}.bam"
+        rules.demux_bam.output
     output:
         "{results}/{run}/{dorado}/{model}/fastq_by_signal/{signal}/{sample}.{signal}.fastq.gz"
     params:
