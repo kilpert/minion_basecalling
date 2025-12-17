@@ -190,7 +190,7 @@ rule dorado_basecaller:
 #         "touch {output} "
 
 
-checkpoint dorado_demux:
+rule dorado_demux:
     input:
         rules.dorado_basecaller.output.bam
     output:
@@ -201,7 +201,7 @@ checkpoint dorado_demux:
         outdir="{results}/{run}/{dorado}/{model}/demux",
         barcode_kits=lambda wildcards: config["run"]["barcode_kits"],
         sample_sheet=lambda wildcards: config["run"]["sample_sheet"],
-        samples=samples,
+        ## samples=samples,
     log:
         "{results}/{run}/{dorado}/{model}/demux/{run}.{model}.demux.log"
     benchmark:
@@ -222,15 +222,31 @@ checkpoint dorado_demux:
         "--output-dir {params.outdir} "
         "{input} "
         "2>{log}; "
-        ## rename bam files to remove the barcode prefix added by dorado:
-        "for bam in {params.outdir}/*.bam; do "
-        "bname=$(basename $bam | sed 's/^[^_]*_//'); "
-        "mv $bam {params.outdir}/$bname; "
-        "done; "
-        ## if no bam file for sample, create empty bam file (only including a header):
-        "for sample in {params.samples}; do "
-        "[ -f {params.outdir}/${{sample}}.bam ] || samtools view -H {params.outdir}/unclassified.bam -b -o {params.outdir}/${{sample}}.bam; "
-        "done "
+        # ## if no bam file for sample, create empty bam file (only including a header):
+        # "for sample in {params.samples}; do "
+        # "[ -f {params.outdir}/${{sample}}.bam ] || samtools view -H {params.outdir}/unclassified.bam -b -o {params.outdir}/${{sample}}.bam; "
+        # "done "
+
+
+rule demux_bam:
+    input:
+        rules.dorado_demux.output
+    output:
+        "{results}/{run}/{dorado}/{model}/bam/{sample}.bam",  
+    params:
+        samples=samples,
+        outdir="{results}/{run}/{dorado}/{model}/bam"
+    conda:
+        "../envs/samtools.yaml"
+    shell:
+        "[ -f {output} ] && rm {output}; "
+        "SRC=$(find {input} -name '*_pass_*{wildcards.sample}*.bam' | head -1); "
+        """REL_SRC=$(realpath --relative-to="{params.outdir}" "$SRC"); """
+        "ln -s $REL_SRC {output}; "
+        ## if no bam file for sample, create empty bam file (only including a header)
+        "SRC_U=$(find {input} -name '*unclassified*.bam' | head -1); "
+        "[ -f {output} ] || samtools view -H $SRC_U -b -o {params.outdir}/${wildcards.sample}.bam; "
+
 
 
 # rule dorado_trim:
