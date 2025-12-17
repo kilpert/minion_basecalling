@@ -208,22 +208,32 @@ def run_dorado():
 
         file_list.append(
             expand("{results}/{run}/{dorado}/{model}/demux",
-                    results=results,
-                    run=run,
-                    dorado=dorado,
-                    model=config["dorado_basecaller"][dorado]["model"].keys(),
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
                 )
         )
 
-        # file_list.append(
-        #     expand("{results}/{run}/{dorado}/{model}/demux/{sample}.bam",
-        #         results=results,
-        #         run=run,
-        #         dorado=dorado,
-        #         model=config["dorado_basecaller"][dorado]["model"].keys(),
-        #         sample=samples,
-        #     )
-        # )
+        file_list.append(
+            expand("{results}/{run}/{dorado}/{model}/bam/{sample}.bam",
+                results=results,
+                run=run,
+                dorado=dorado,
+                model=config["dorado_basecaller"][dorado]["model"].keys(),
+                sample=samples,
+            )
+        )
+
+        ## file_list.append(
+        ##     expand("{results}/{run}/{dorado}/{model}/demux/{sample}.bam",
+        ##         results=results,
+        ##         run=run,
+        ##         dorado=dorado,
+        ##         model=config["dorado_basecaller"][dorado]["model"].keys(),
+        ##         sample=samples,
+        ##     )
+        ## )
 
         file_list.append(
             expand("{results}/{run}/{dorado}/{model}/fastq_by_signal/{signal}/{sample}.{signal}.fastq.gz",
