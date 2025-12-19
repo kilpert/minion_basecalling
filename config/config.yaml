@@ -139,6 +139,21 @@ dorado_basecaller:
       sup: sup
     demux_extra: --emit-summary --no-trim
 
+  dorado_1.3.0_simplex:
+    env: sleep $((RANDOM % 20 + 1)); GPU=$(workflow/scripts/which_gpu); echo "GPU:" $GPU; export CUDA_VISIBLE_DEVICES="$GPU"; # choose least used GPU on g1-9
+    bin: opt/dorado/dorado-1.3.0-linux-x64/bin/dorado
+    extra: --recursive --no-trim # paramter "--no-trim" is not allowd for dorado duplex!
+    basecaller: basecaller # =simplex
+    models_directory: resources/dorado_models/auto
+    model:
+      ## manual
+      ## label: name or path
+      ## or
+      ## automatic model download
+      fast: fast # not available for duplex!
+      hac: hac # Latest compatible hac simplex basecalling model
+      sup: sup
+    demux_extra: --emit-summary --no-trim
 
 nanoplot: --huge --N50 --info_in_report --loglength # --barcoded --plots dot --legacy hex --tsv_stats
 
